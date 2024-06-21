@@ -1,3 +1,6 @@
+import sys
+sys.path.append('/path/to/transaction')
+
 from flask import Flask, request, jsonify
 from transaction import create_transaction, recognize_speech, create_nft, sender_private_key, sender_public_key, receiver_public_key, LoveAction
 
