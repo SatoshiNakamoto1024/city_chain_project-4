@@ -1,16 +1,29 @@
 from flask import Flask, request, jsonify
-import requests
+from transaction import create_transaction, recognize_speech, create_nft, sender_private_key, sender_public_key, receiver_public_key, LoveAction
 
 app = Flask(__name__)
 
-MUNICIPAL_CHAIN_HOST = "municipal_chain"
+@app.route('/')
+def home():
+    return "Flask server is running"
 
-@app.route('/add_action', methods=['POST'])
-def add_action():
-    action_data = request.json
-    # 市町村ブロックチェーンにデータを送信
-    response = requests.post(f'http://{MUNICIPAL_CHAIN_HOST}:8081/add_block', json=action_data)
-    return jsonify(response.json())
+@app.route('/create_transaction', methods=['POST'])
+def create_transaction_endpoint():
+    data = request.json
+    transaction = create_transaction(data['sender'], data['receiver'], data['amount'])
+    return jsonify(transaction), 201
+
+@app.route('/recognize_and_create_nft', methods=['POST'])
+def recognize_and_create_nft_endpoint():
+    recognized_text = recognize_speech()
+    if recognized_text:
+        category = "本音で話す"
+        dimension = "3次元：○○会社"
+        content = "あなたはどの立場でその発言をしているんだ！もっと自分の立場を考えろ！"
+        action = LoveAction(category, dimension, content, sender_public_key, receiver_public_key)
+        create_nft(action)
+        return jsonify({"message": "NFT created successfully"}), 201
+    return jsonify({"error": "Speech recognition failed"}), 400
 
 if __name__ == '__main__':
-    app.run(port=5000, host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5000)
