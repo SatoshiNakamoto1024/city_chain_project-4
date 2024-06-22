@@ -6,9 +6,10 @@ use rocket::fairing::AdHoc;
 use rocket::http::Status;
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use std::sync::Arc;
+use chrono::Utc;
 use reqwest::Client;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 struct Block {
     index: u64,
     timestamp: u64,
@@ -89,11 +90,10 @@ async fn main() {
         .attach(AdHoc::on_ignite("SSL Config", |rocket| async {
             rocket::config::Config {
                 tls: Some(rocket::config::TlsConfig::new(ssl)),
-                ..rocket.config().clone()
+                ..rocket::config::Config::default()
             }
         }))
         .launch()
         .await
         .unwrap();
 }
-

@@ -6,8 +6,9 @@ use rocket::fairing::AdHoc;
 use rocket::http::Status;
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use std::sync::Arc;
+use chrono::Utc;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 struct Block {
     index: u64,
     timestamp: u64,
@@ -32,7 +33,7 @@ async fn create_transaction(transaction: Json<Transaction>, chain: &rocket::Stat
     // トランザクションを含む新しいブロックを作成
     let new_block = Block {
         index: chain.len() as u64 + 1,
-        timestamp: chrono::Utc::now().timestamp() as u64,
+        timestamp: Utc::now().timestamp() as u64,
         data: serde_json::to_string(&*transaction).unwrap(),
         prev_hash: chain.last().map_or("0".to_string(), |b| b.hash.clone()),
         hash: "some_hash".to_string(), // 実際にはハッシュを計算する必要があります
@@ -74,7 +75,7 @@ async fn main() {
         .attach(AdHoc::on_ignite("SSL Config", |rocket| async {
             rocket::config::Config {
                 tls: Some(rocket::config::TlsConfig::new(ssl)),
-                ..rocket.config().clone()
+                ..rocket::config::Config::default()
             }
         }))
         .launch()
