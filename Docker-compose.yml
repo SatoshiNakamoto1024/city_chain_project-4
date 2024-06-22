@@ -1,20 +1,20 @@
+version: '3.8'
+
 services:
-  main_chain:
-    build:
-      context: ./main_chain
-    ports:
-      - "8080:8080"
-  municipal_chain:
-    build:
-      context: ./municipal_chain
-    ports:
-      - "8081:8081"
   dapps:
-    build:
-      context: ./dapps
+    build: ./dapps
     ports:
       - "5000:5000"
-    depends_on:
-      - main_chain
-      - municipal_chain
+  municipal_chain:
+    build: ./municipal_chain
+    ports:
+      - "8000:8000"
+  continental_main_chain:
+    build: ./continental_main_chain
+    ports:
+      - "8001:8001"
+  global_main_chain:
+    build: ./global_main_chain
+    ports:
+      - "8002:8002"
 
