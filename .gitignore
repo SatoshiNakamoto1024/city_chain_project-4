@@ -1,5 +1,22 @@
+# Node.js dependencies
 node_modules/
+
+# Rust build artifacts
 target/
+
+# Log files
 *.log
+
+# Python compiled files
 *.pyc
 __pycache__/
+
+# Docker related files
+Dockerfile
+.dockerignore
+
+# Rust specific files
+Cargo.lock
+
+# Environment variables
+.env

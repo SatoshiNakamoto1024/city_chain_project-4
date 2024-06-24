@@ -1,20 +1,42 @@
-version: '3.8'
-
+version: '3.7'
 services:
+  global_main_chain:
+    build: ./global_main_chain
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./global_main_chain:/usr/src/app
+    depends_on:
+      - lattice_signer_service
+
+  continental_main_chain:
+    build: ./continental_main_chain
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./continental_main_chain:/usr/src/app
+    depends_on:
+      - lattice_signer_service
+
+  municipal_chain:
+    build: ./municipal_chain
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./municipal_chain:/usr/src/app
+    depends_on:
+      - lattice_signer_service
+
   dapps:
     build: ./dapps
     ports:
       - "5000:5000"
-  municipal_chain:
-    build: ./municipal_chain
-    ports:
-      - "8000:8000"
-  continental_main_chain:
-    build: ./continental_main_chain
-    ports:
-      - "8001:8001"
-  global_main_chain:
-    build: ./global_main_chain
-    ports:
-      - "8002:8002"
+    volumes:
+      - ./dapps:/usr/src/app
 
+  lattice_signer_service:
+    build: ./lattice_signer_service
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./lattice_signer_service:/usr/src/app

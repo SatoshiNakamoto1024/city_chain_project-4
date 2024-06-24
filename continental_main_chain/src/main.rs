@@ -1,13 +1,17 @@
 #[macro_use] extern crate rocket;
+#[macro_use] extern crate serde;
 
 use rocket::serde::{json::Json, Deserialize, Serialize};
 use rocket::tokio::sync::Mutex;
-use rocket::fairing::AdHoc;
 use rocket::http::Status;
+use rocket::config::{Config, Environment, TlsConfig};
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use std::sync::Arc;
 use chrono::Utc;
 use reqwest::Client;
+use serde::{Serialize, Deserialize};
+use std::process::Command;
+use my_ntru_lib::{NTRUKeys, generate_ntru_keys, ntru_encrypt, ntru_decrypt, sign_transaction, verify_signature};
 
 #[derive(Serialize, Deserialize, Clone)]
 struct Block {
@@ -16,6 +20,8 @@ struct Block {
     data: String,
     prev_hash: String,
     hash: String,
+    verifiable_credential: String,
+    signature: Vec<u8>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -23,6 +29,8 @@ struct Transaction {
     sender: String,
     receiver: String,
     amount: f64,
+    verifiable_credential: String,
+    signature: Vec<u8>,
 }
 
 type Blockchain = Arc<Mutex<Vec<Block>>>;
@@ -42,6 +50,8 @@ async fn create_transaction(transaction: Json<Transaction>, client: &rocket::Sta
             sender: "error".to_string(),
             receiver: "error".to_string(),
             amount: 0.0,
+            verifiable_credential: "error".to_string(),
+            signature: vec![],
         }),
     }
 }
@@ -49,13 +59,21 @@ async fn create_transaction(transaction: Json<Transaction>, client: &rocket::Sta
 #[post("/add_block", format = "json", data = "<block>")]
 async fn add_block(block: Json<Block>, chain: &rocket::State<Blockchain>, client: &rocket::State<Client>) -> Status {
     let mut chain = chain.lock().await;
+    
+    let block = block.into_inner();
+
+    // ラティス署名の検証
+    if !verify_signature(&block.data.as_bytes(), &block.signature, &block.verifiable_credential.as_bytes()) {
+        return Status::Forbidden;
+    }
+    
     // ブロックの検証と追加
-    chain.push(block.into_inner());
+    chain.push(block.clone());
 
     // グローバルメインチェーンへのブロック転送
     let global_chain_url = "http://global_main_chain:8000/add_block";
     let res = client.post(global_chain_url)
-                    .json(&*block)
+                    .json(&block)
                     .send()
                     .await;
 
@@ -74,24 +92,20 @@ async fn get_chain(chain: &rocket::State<Blockchain>) -> Json<Vec<Block>> {
 #[rocket::main]
 async fn main() {
     let chain = Arc::new(Mutex::new(Vec::<Block>::new()));
-    
+
     // SSL設定
-    let ssl = SslAcceptor::mozilla_intermediate(SslMethod::tls())
-        .unwrap()
-        .set_private_key_file("key.pem", SslFiletype::PEM)
-        .unwrap()
-        .set_certificate_chain_file("cert.pem")
-        .unwrap();
-    
-    rocket::build()
+    let tls_config = TlsConfig::from_paths("cert.pem", "key.pem");
+    let config = Config::figment()
+        .merge(("tls.certs", "cert.pem"))
+        .merge(("tls.key", "key.pem"));
+
+    rocket::custom(config)
         .manage(chain)
         .manage(Client::new())
         .mount("/", routes![create_transaction, add_block, get_chain])
         .attach(AdHoc::on_ignite("SSL Config", |rocket| async {
-            rocket::config::Config {
-                tls: Some(rocket::config::TlsConfig::new(ssl)),
-                ..rocket::config::Config::default()
-            }
+            rocket.config().await.unwrap();
+            rocket
         }))
         .launch()
         .await

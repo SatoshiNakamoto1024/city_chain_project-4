@@ -2,8 +2,41 @@ from datetime import datetime
 import hashlib
 import json
 import qrcode
-from ecdsa import SigningKey, VerifyingKey, NIST384p
 import speech_recognition as sr
+from Crypto.PublicKey import RSA
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA256
+
+# NTRUクラスの実装
+class Ntru:
+    def __init__(self):
+        pass
+
+    def encrypt(self, plaintext, public_key):
+        # 暗号化の簡単な実装例
+        return bytes([p ^ k for p, k in zip(plaintext, public_key)])
+
+    def decrypt(self, ciphertext, private_key):
+        # 復号化の簡単な実装例
+        return bytes([c ^ k for c, k in zip(ciphertext, private_key)])
+
+    def sign(self, message, private_key):
+        # 署名の簡単な実装例
+        hashed_message = SHA256.new(message)
+        signature = pkcs1_15.new(private_key).sign(hashed_message)
+        return signature
+
+    def verify(self, message, signature, public_key):
+        # 署名検証の簡単な実装例
+        hashed_message = SHA256.new(message)
+        try:
+            pkcs1_15.new(public_key).verify(hashed_message, signature)
+            return True
+        except (ValueError, TypeError):
+            return False
+
+# Ntruクラスの使用
+ntru = Ntru()
 
 # トランザクション作成関数
 def create_transaction(sender, receiver, amount):
@@ -62,15 +95,10 @@ class LoveAction:
         }
 
     def sign_transaction(self, private_key):
-        sk = SigningKey.from_string(bytes.fromhex(private_key), curve=NIST384p)
-        self.signature = sk.sign(json.dumps(self.to_dict(), sort_keys=True).encode()).hex()
+        self.signature = ntru.sign(json.dumps(self.to_dict(), sort_keys=True).encode(), private_key).hex()
 
     def verify_signature(self, public_key):
-        vk = VerifyingKey.from_string(bytes.fromhex(public_key), curve=NIST384p)
-        try:
-            return vk.verify(bytes.fromhex(self.signature), json.dumps(self.to_dict(), sort_keys=True).encode())
-        except:
-            return False
+        return ntru.verify(json.dumps(self.to_dict(), sort_keys=True).encode(), bytes.fromhex(self.signature), public_key)
 
 # NFT作成関数
 def create_nft(action):
@@ -84,7 +112,9 @@ def create_nft(action):
     print("QR code generated and saved as 'love_action_qr.png'")
 
 # 鍵ペアの生成（例）
-sender_private_key = SigningKey.generate(curve=NIST384p).to_string().hex()
-sender_public_key = SigningKey.from_string(bytes.fromhex(sender_private_key), curve=NIST384p).verifying_key.to_string().hex()
-receiver_private_key = SigningKey.generate(curve=NIST384p).to_string().hex()
-receiver_public_key = SigningKey.from_string(bytes.fromhex(receiver_private_key), curve=NIST384p).verifying_key.to_string().hex()
+key = RSA.generate(2048)
+sender_private_key = key
+sender_public_key = key.publickey()
+receiver_key = RSA.generate(2048)
+receiver_private_key = receiver_key
+receiver_public_key = receiver_key.publickey()
