@@ -1,0 +1,36 @@
+{
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "global_main_chain"
+        },
+        {
+            "path": "municipal_chain"
+        },
+        {
+            "path": "ntru"
+        },
+        {
+            "path": "lattice_signer_service"
+        },
+        {
+            "path": "Dapps"
+        },
+        {
+            "path": "mobile_app"
+        }
+    ],
+    "settings": {
+        "rust-analyzer.cargo.workspaceRoot": ".",
+        "python.pythonPath": "python3",
+        "editor.formatOnSave": true,
+        "files.exclude": {
+            "**/node_modules": true,
+            "**/target": true,
+            "**/__pycache__": true,
+            "**/*.pyc": true
+        }
+    }
+}

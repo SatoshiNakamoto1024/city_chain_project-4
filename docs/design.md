@@ -232,3 +232,38 @@
       "valid": "boolean"
     }
     ```
+
+## Consensus Algorithms
+システムの整合性とセキュリティを確保するために、さまざまなコンセンサスアルゴリズムを使用します。
+
+### Delegated Proof of Stake (DPoS)
+#### Struct Definition
+```rust
+struct DPoS {
+    municipalities: Vec<String>,
+    approved_representative: Option<String>,
+}
+
+impl DPoS {
+    fn new(municipalities: Vec<String>) -> Self {
+        Self {
+            municipalities,
+            approved_representative: None,
+        }
+    }
+
+    fn elect_representative(&mut self) -> String {
+        let representative = self.municipalities.choose(&mut rand::thread_rng()).unwrap().clone();
+        self.approved_representative = Some(representative.clone());
+        representative
+    }
+
+    fn approve_transaction(&self, transaction: &mut Transaction) -> Result<&str, &str> {
+        if let Some(representative) = &self.approved_representative {
+            transaction.signature = format!("approved_by_{}", representative);
+            Ok("Transaction approved")
+        } else {
+            Err("No representative elected")
+        }
+    }
+}

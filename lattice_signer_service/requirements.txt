@@ -1,2 +1,3 @@
 Flask==2.0.3
-pyntru==1.0.0  # 実際のpyntruライブラリのバージョンに合わせて変更してください
+pycryptodome==3.10.1
+requests==2.25.1

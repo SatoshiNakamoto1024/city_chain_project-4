@@ -20,3 +20,50 @@ Cargo.lock
 
 # Environment variables
 .env
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+
+# Editor directories and files
+.vscode/
+.idea/
+*.iml
+
+# Build artifacts
+/dist/
+/build/
+/out/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.backup
+
+# Compiled binary files
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+*.o
+*.a
+*.d
+
+# Miscellaneous
+*.log
+*.cache
+*.pid
+
+# Dependency directories
+/vendor/
+lib-cov
+*.coverage
+*.coveralls
+
+# Ansible retry files
+*.retry

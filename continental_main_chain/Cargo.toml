@@ -4,14 +4,13 @@ version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-rocket = "0.5.0-rc.1"
-serde = { version = "1.0", features = ["derive"] }
-serde_derive = "1.0"
-serde_json = "1.0"
+rocket = { version = "0.5.0-rc.2", features = ["json", "tls"] }
 chrono = "0.4"
 reqwest = { version = "0.11", features = ["json"] }
-tokio = { version = "1", features = ["full"] }
-openssl = "0.10"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 rand = "0.8"
-rsa = "0.4"
-ntru = { path = "../ntru" }  # ローカル依存関係として追加
+sha2 = "0.10"
+hex = "0.4"
+ntru = { path = "../ntru" }
+

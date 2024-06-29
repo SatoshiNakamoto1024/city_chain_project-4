@@ -4,3 +4,5 @@ qrcode[pil]
 speechrecognition
 pycryptodome
 numpy
+cryptography
+pytz

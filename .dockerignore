@@ -1,5 +1,43 @@
+# 忽略するディレクトリ
 node_modules
 target
+
+# 忽略するファイル
 Dockerfile
 .dockerignore
 .git
+
+# Cargo.lock を無視
+Cargo.lock
+
+# ソース管理に必要のないディレクトリとファイル
+**/tmp/
+**/logs/
+**/build/
+**/cache/
+**/dist/
+
+# その他の一時ファイル
+*.log
+*.tmp
+*.bak
+*.swp
+*.swp~
+
+# IDEやエディタの設定ファイルを無視
+.vscode/
+.idea/
+*.iml
+
+# コンパイルされたバイナリファイルを無視
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+*.o
+*.a
+*.d
+
+# バックアップファイルを無視
+*~

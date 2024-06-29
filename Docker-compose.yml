@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 services:
   global_main_chain:
     build: ./global_main_chain
@@ -16,7 +16,7 @@ services:
     volumes:
       - ./continental_main_chain:/usr/src/app
     depends_on:
-      - lattice_signer_service
+      - global_main_chain
 
   municipal_chain:
     build: ./municipal_chain
@@ -25,7 +25,7 @@ services:
     volumes:
       - ./municipal_chain:/usr/src/app
     depends_on:
-      - lattice_signer_service
+      - continental_main_chain
 
   dapps:
     build: ./dapps
@@ -33,6 +33,8 @@ services:
       - "5000:5000"
     volumes:
       - ./dapps:/usr/src/app
+    depends_on:
+      - municipal_chain
 
   lattice_signer_service:
     build: ./lattice_signer_service
@@ -40,3 +42,19 @@ services:
       - "5001:5001"
     volumes:
       - ./lattice_signer_service:/usr/src/app
+    depends_on:
+      - ntru
+
+  mobile_app:
+    build: ./mobile_app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./mobile_app:/usr/src/app
+    depends_on:
+      - dapps
+
+  ntru:
+    build: ./ntru
+    volumes:
+      - ./ntru:/usr/src/app

@@ -3,6 +3,14 @@ name = "ntru"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "ntru"
+path = "src/lib.rs"
+
+[[bin]]
+name = "ntru_example"
+path = "src/bin/ntru_example.rs"
+
 [dependencies]
 rand = "0.8"
 serde = { version = "1.0", features = ["derive"] }

@@ -6,31 +6,36 @@ import speech_recognition as sr
 from Crypto.PublicKey import RSA
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA256
+from Crypto.Cipher import PKCS1_OAEP 
 
-# NTRUクラスの実装
 class Ntru:
     def __init__(self):
         pass
 
     def encrypt(self, plaintext, public_key):
-        # 暗号化の簡単な実装例
-        return bytes([p ^ k for p, k in zip(plaintext, public_key)])
+        # 公開鍵を使用して暗号化
+        key = RSA.import_key(public_key)
+        cipher_rsa = PKCS1_OAEP.new(key)
+        return cipher_rsa.encrypt(plaintext)
 
     def decrypt(self, ciphertext, private_key):
-        # 復号化の簡単な実装例
-        return bytes([c ^ k for c, k in zip(ciphertext, private_key)])
+        # 秘密鍵を使用して復号化
+        key = RSA.import_key(private_key)
+        cipher_rsa = PKCS1_OAEP.new(key)
+        return cipher_rsa.decrypt(ciphertext)
 
     def sign(self, message, private_key):
-        # 署名の簡単な実装例
-        hashed_message = SHA256.new(message)
-        signature = pkcs1_15.new(private_key).sign(hashed_message)
-        return signature
+        # 秘密鍵を使用してメッセージに署名
+        key = RSA.import_key(private_key)
+        h = SHA256.new(message)
+        return pkcs1_15.new(key).sign(h)
 
     def verify(self, message, signature, public_key):
-        # 署名検証の簡単な実装例
-        hashed_message = SHA256.new(message)
+        # 公開鍵を使用して署名を検証
+        key = RSA.import_key(public_key)
+        h = SHA256.new(message)
         try:
-            pkcs1_15.new(public_key).verify(hashed_message, signature)
+            pkcs1_15.new(key).verify(h, signature)
             return True
         except (ValueError, TypeError):
             return False
@@ -39,7 +44,7 @@ class Ntru:
 ntru = Ntru()
 
 # トランザクション作成関数
-def create_transaction(sender, receiver, amount):
+def create_transaction(sender, receiver, amount, private_key):
     transaction = {
         "sender": sender,
         "receiver": receiver,
@@ -47,6 +52,7 @@ def create_transaction(sender, receiver, amount):
         "timestamp": datetime.utcnow().isoformat(),
         "transaction_id": hashlib.sha256(f"{sender}{receiver}{amount}{datetime.utcnow().isoformat()}".encode()).hexdigest()
     }
+    transaction["signature"] = ntru.sign(json.dumps(transaction).encode(), private_key).hex()
     return transaction
 
 # 音声認識関数
@@ -101,8 +107,8 @@ class LoveAction:
         return ntru.verify(json.dumps(self.to_dict(), sort_keys=True).encode(), bytes.fromhex(self.signature), public_key)
 
 # NFT作成関数
-def create_nft(action):
-    action.sign_transaction(sender_private_key)
+def create_nft(action, private_key):
+    action.sign_transaction(private_key)
     nft_data = json.dumps(action.to_dict())
     qr = qrcode.QRCode(version=1, box_size=10, border=5)
     qr.add_data(nft_data)
@@ -113,8 +119,8 @@ def create_nft(action):
 
 # 鍵ペアの生成（例）
 key = RSA.generate(2048)
-sender_private_key = key
-sender_public_key = key.publickey()
+sender_private_key = key.export_key()
+sender_public_key = key.publickey().export_key()
 receiver_key = RSA.generate(2048)
-receiver_private_key = receiver_key
-receiver_public_key = receiver_key.publickey()
+receiver_private_key = receiver_key.export_key()
+receiver_public_key = receiver_key.publickey().export_key()
