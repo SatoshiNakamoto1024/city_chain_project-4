@@ -1,20 +1,29 @@
-FROM rust:latest
+# ベースイメージとして公式のRustランタイムを使用
+FROM rust:latest AS builder
 
 # 作業ディレクトリを設定
 WORKDIR /usr/src/app
 
 # 必要なパッケージをインストール
-RUN apt-get update && apt-get install -y pkg-config libssl-dev
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libssl-dev
 
-# ソースコードをコピー
+# 依存関係をコンテナにコピー
+COPY Cargo.toml Cargo.lock ./
+
+# 依存関係をビルド
+RUN mkdir src && echo "fn main() {}" > src/main.rs
+RUN cargo build --release
+RUN rm -rf src
+
+# 残りのソースコードをコンテナにコピー
 COPY . .
 
-# NTRUクレートの依存関係をコピーしてビルド
-COPY ../ntru /usr/src/app/ntru
-RUN cd /usr/src/app/ntru && cargo build --release
-
-# メインアプリケーションをビルド
+# アプリケーションをビルド
 RUN cargo build --release
 
-# アプリケーションを起動
-CMD ["./target/release/global_main_chain"]
+# 実行可能ファイルをエントリーポイントとして設定
+FROM debian:buster-slim
+COPY --from=builder /usr/src/app/target/release/global_main_chain /usr/local/bin/global_main_chain
+CMD ["/usr/local/bin/global_main_chain"]

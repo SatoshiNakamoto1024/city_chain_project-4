@@ -1,18 +1,11 @@
+# D:\city_chain_project\Cargo.toml
 [workspace]
-members = ["global_main_chain", "municipal_chain", "ntru", "lattice_signer_service"]
+members = [
+    "global_main_chain",
+    "municipal_chain",
+    "continental_main_chain"
+]
+resolver = "2"
 
-[dependencies]
-# 全体で共有する依存関係
-rocket = { version = "0.5.0-rc.2", features = ["json", "tls"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-chrono = "0.4"
-reqwest = { version = "0.11", features = ["json"] }
-tokio = { version = "1", features = ["full"] }
-openssl = "0.10"
-rand = "0.8"
-ntru = { path = "./ntru" }
-
-[features]
-# 全体で共有する機能
-default = ["rocket/json", "rocket/tls"]
+[patch.crates-io]
+openssl-src = { path = "local_openssl_src" }

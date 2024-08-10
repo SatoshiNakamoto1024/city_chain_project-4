@@ -4,25 +4,24 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rocket = { version = "0.5.0-rc.2", features = ["json", "tls"] }
+rocket = { version = "0.5.1", features = ["json", "tls"] } 
 chrono = "0.4"
 reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 rand = "0.8"
 ntru = { path = "../ntru" }
-sha2 = "0.9" 
-tokio = { version = "1.8", features = ["full"], optional = true }
+sha2 = "0.9"
+tokio = { version = "1.8", features = ["full"] }
+hex = "0.4"
+openssl = { version = "0.10", features = ["vendored"] }
+openssl-sys = "0.9"
 
-[features]
-default = ["dpos", "proof_of_place", "proof_of_history", "sha2"]
+[patch.crates-io]
+openssl-src = { path = "local_openssl_src" }
 
 [dependencies.rust-crypto]
 version = "0.2"
-optional = true
-
-[dependencies.hex]
-version = "0.4"
 optional = true
 
 [dependencies.base64]
@@ -49,3 +48,7 @@ optional = true
 rand = "0.8"
 serde_json = "1.0"
 chrono = "0.4"
+
+[[bin]]
+name = "municipal_chain"
+path = "src/main.rs"

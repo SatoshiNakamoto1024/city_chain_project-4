@@ -1,9 +1,14 @@
-use rand::Rng;
 use serde::{Deserialize, Serialize};
 use sha2::{Sha256, Digest};
 use chrono::{DateTime, Utc};
+use rand::Rng;
+use rand::prelude::SliceRandom;
 
-#[derive(Serialize, Deserialize, Clone)]
+pub mod ntru_encrypt;
+pub mod ntru_param;
+pub mod ntru_sign;
+
+#[derive(Serialize, Deserialize, Clone, Debug)] // 追加: Debugの属性
 pub struct NTRUKeys {
     pub public_key: Vec<u8>,
     pub private_key: Vec<u8>,
@@ -104,7 +109,6 @@ impl DPoS {
     }
 
     pub fn elect_representative(&mut self) -> String {
-        use rand::seq::SliceRandom;
         let representative = self.municipalities.choose(&mut rand::thread_rng()).unwrap().clone();
         self.approved_representative = Some(representative.clone());
         representative
@@ -120,7 +124,7 @@ impl DPoS {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Transaction {
     pub transaction_id: String,
     pub municipality: String,
@@ -248,9 +252,9 @@ impl Consensus {
         for transaction in &mut self.transactions {
             if self.dpos.approve_transaction(transaction).is_ok() {
                 self.poh.add_event(&transaction.generate_proof_of_history());
-                println!("Transaction processed: {:?}", transaction);
+                println!("Transaction processed: {:?}", transaction); // Debugのための修正
             } else {
-                println!("Transaction failed: {:?}", transaction);
+                println!("Transaction failed: {:?}", transaction); // Debugのための修正
             }
         }
     }

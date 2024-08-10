@@ -1,14 +1,15 @@
-# 忽略するディレクトリ
-node_modules
+
 target
-
-# 忽略するファイル
-Dockerfile
+node_modules
 .dockerignore
+Dockerfile
 .git
-
-# Cargo.lock を無視
 Cargo.lock
+
+# IDEやエディタの設定ファイルを無視
+.vscode/
+.idea/
+*.iml
 
 # ソース管理に必要のないディレクトリとファイル
 **/tmp/
@@ -23,21 +24,4 @@ Cargo.lock
 *.bak
 *.swp
 *.swp~
-
-# IDEやエディタの設定ファイルを無視
-.vscode/
-.idea/
-*.iml
-
-# コンパイルされたバイナリファイルを無視
-*.exe
-*.dll
-*.so
-*.dylib
-*.bin
-*.o
-*.a
-*.d
-
-# バックアップファイルを無視
 *~

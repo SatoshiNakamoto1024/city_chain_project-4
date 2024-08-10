@@ -1,5 +1,5 @@
 # ベースイメージを指定
-FROM python:3.8
+FROM python:3.9-slim
 
 # 作業ディレクトリを設定
 WORKDIR /usr/src/app
@@ -8,10 +8,20 @@ WORKDIR /usr/src/app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# ntruライブラリをクローンしてインストール
-RUN apt-get update && apt-get install -y git
-RUN git clone https://github.com/SatoshiNakamoto1024/city_chain_project-2.git /usr/src/ntru
-RUN cd /usr/src/ntru && python setup.py install
+# 必要なパッケージをインストール
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libssl-dev \
+    git \
+    cargo \
+    && rm -rf /var/lib/apt/lists/*
+
+# city_chain_project-2リポジトリからntruフォルダーをクローン
+RUN git clone https://github.com/SatoshiNakamoto1024/city_chain_project-2.git /usr/src/city_chain_project && \
+    cp -r /usr/src/city_chain_project/ntru /usr/src/app/ntru
+
+# NTRUクレートの依存関係をコピーしてビルド
+RUN cd /usr/src/app/ntru && cargo build --release
 
 # アプリケーションのソースコードをコピー
 COPY . .

@@ -2,12 +2,12 @@
 
 ProjectName: municipal_chain
 Version: 0.1.0
-Maintainer: Your Name <your.email@example.com>
+Maintainer: SatoshiNakamoto1024
 Description: This directory contains the source code for the municipal chain of the city chain project.
 LastUpdated: 2024-07-01
 
 # Additional Metadata
-GitRepository: https://github.com/your-repo/municipal_chain.git
+GitRepository: https://github.com/SatoshiNakamoto1024/municipal_chain.git
 Dependencies: rocket, serde, chrono, reqwest, tokio, openssl, rand, ntru
 
 # Tags

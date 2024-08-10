@@ -1,11 +1,12 @@
 [package]
 name = "continental_main_chain"
 version = "0.1.0"
+authors = ["Satoshi Nakamoto <next.teal.organization@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-rocket = { version = "0.5.0-rc.2", features = ["json", "tls"] }
-chrono = "0.4"
+rocket = { version = "0.5.1", features = ["json", "tls"] } 
+chrono = { version = "0.4", features = ["serde"] }
 reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -13,4 +14,15 @@ rand = "0.8"
 sha2 = "0.10"
 hex = "0.4"
 ntru = { path = "../ntru" }
+openssl = { version = "0.10", features = ["vendored"] }
+openssl-sys = "0.9"
 
+[patch.crates-io]
+openssl-src = { path = "local_openssl_src" }
+
+[build]
+rustflags = ["-L", "native=D:\\city_chain_project\\OpenSSL-Win64\\lib\\VC\\x64\\MD"]
+
+[[bin]]
+name = "continental_main_chain"
+path = "src/main.rs"

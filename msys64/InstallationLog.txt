@@ -1,0 +1,192 @@
+************************************* Invoked: Sun Aug 4 14:30:43 2024
+[0] Arguments: C:\Users\kibiy\Downloads\msys2-x86_64-20240727 (1).exe
+[9] Operations sanity check succeeded.
+[19] Using metadata cache from "C:/Users/kibiy/AppData/Local/cache\\qt-installer-framework\\d75f1c19-3379-3717-ae8d-1404b51494a9"
+[19] Found 0 cached items.
+[19] Language: ja-JP
+[436] Loaded control script ":/metadata/installer-config/control_js.js"
+[436] Using control script: ":/metadata/installer-config/control_js.js"
+[20476] Fetching latest update information...
+[20499] Loading component scripts...
+[40534] backup  operation: Mkdir
+[40534] 	- arguments: C:/msys64
+[40534] Done
+[40534] perform  operation: Mkdir
+[40534] 	- arguments: C:/msys64
+[40537] Done
+[40537] Preparing the installation...
+[40537] Install size: 1 components
+[40544] Preparing to unpack components...
+[40546] backup com.msys2.root concurrent operation: Extract
+[40546] 	- arguments: installer://com.msys2.root/20240727msys64.7z, C:/msys64
+[40546] Started
+[40921] Unpacking components...
+[40921] perform com.msys2.root concurrent operation: Extract
+[40921] 	- arguments: installer://com.msys2.root/20240727msys64.7z, C:/msys64
+[40921] Started
+[69099] Installing component MSYS2
+[69100] backup com.msys2.root operation: CreateShortcut
+[69100] 	- arguments: C:/msys64/mingw32.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 MINGW32.lnk, iconPath=C:/msys64/mingw32.exe
+[69100] Done
+[69101] perform com.msys2.root operation: CreateShortcut
+[69101] 	- arguments: C:/msys64/mingw32.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 MINGW32.lnk
+[69242] Done
+[69242] backup com.msys2.root operation: CreateShortcut
+[69242] 	- arguments: C:/msys64/mingw64.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 MINGW64.lnk, iconPath=C:/msys64/mingw64.exe
+[69243] Done
+[69243] perform com.msys2.root operation: CreateShortcut
+[69243] 	- arguments: C:/msys64/mingw64.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 MINGW64.lnk
+[69260] Done
+[69260] backup com.msys2.root operation: CreateShortcut
+[69260] 	- arguments: C:/msys64/ucrt64.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 UCRT64.lnk, iconPath=C:/msys64/ucrt64.exe
+[69260] Done
+[69260] perform com.msys2.root operation: CreateShortcut
+[69260] 	- arguments: C:/msys64/ucrt64.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 UCRT64.lnk
+[69278] Done
+[69279] backup com.msys2.root operation: CreateShortcut
+[69279] 	- arguments: C:/msys64/clang64.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 CLANG64.lnk, iconPath=C:/msys64/clang64.exe
+[69279] Done
+[69279] perform com.msys2.root operation: CreateShortcut
+[69279] 	- arguments: C:/msys64/clang64.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 CLANG64.lnk
+[69297] Done
+[69298] backup com.msys2.root operation: CreateShortcut
+[69298] 	- arguments: C:/msys64/clangarm64.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 CLANGARM64.lnk, iconPath=C:/msys64/clangarm64.exe
+[69298] Done
+[69298] perform com.msys2.root operation: CreateShortcut
+[69298] 	- arguments: C:/msys64/clangarm64.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 CLANGARM64.lnk
+[69316] Done
+[69316] backup com.msys2.root operation: CreateShortcut
+[69316] 	- arguments: C:/msys64/msys2.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 MSYS.lnk, iconPath=C:/msys64/msys2.exe
+[69316] Done
+[69317] perform com.msys2.root operation: CreateShortcut
+[69317] 	- arguments: C:/msys64/msys2.exe, C:\Users\kibiy\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\MSYS2/MSYS2 MSYS.lnk
+[69335] Done
+[69335] backup com.msys2.root operation: Execute
+[69336] 	- arguments: C:/msys64\usr\bin\bash.exe, --login, -c, exit
+[69336] Done
+[69336] perform com.msys2.root operation: Execute
+[69336] 	- arguments: C:/msys64\usr\bin\bash.exe, --login, -c, exit
+[69482] C:/msys64\\usr\\bin\\bash.exe" started, arguments: "--login -c exit
+[70450] Copying skeleton files.\nThese files are for the users to personalise their msys2 experience.\n\nThey will never be overwritten nor automatically updated.\n\n
+[70691] './.bashrc' -> '/home/kibiy/.bashrc'\n
+[70745] './.bash_logout' -> '/home/kibiy/.bash_logout'\n
+[70816] './.bash_profile' -> '/home/kibiy/.bash_profile'\n
+[70890] './.profile' -> '/home/kibiy/.profile'\n
+[71067] 'C:\\WINDOWS\\system32\\drivers\\etc\\hosts' -> '/etc/hosts'\n
+[71186] 'C:\\WINDOWS\\system32\\drivers\\etc\\protocol' -> '/etc/protocols'\n
+[71324] 'C:\\WINDOWS\\system32\\drivers\\etc\\services' -> '/etc/services'\n
+[71462] 'C:\\WINDOWS\\system32\\drivers\\etc\\networks' -> '/etc/networks'\n
+[73454] ==> Generating pacman master key. This may take some time.\n
+[76178] ==> Updating trust database...\n
+[76613] ==> Appending keys from msys2.gpg...\n
+[77773] ==> Locally signing trusted keys in keyring...\n
+[78961]   -> Locally signed 5 keys.\n
+[78986] ==> Importing owner trust values...\n
+[79083] ==> Disabling revoked keys in keyring...\n
+[79533]   -> Disabled 4 keys.\n
+[79558] ==> Updating trust database...\n
+[102016] \x1B[H\x1B[2J\x1B[3J
+[102020] Warning: [1;32mMSYS2 is starting for the first time. Executing the initial setup.[1;0m
+gpg: /etc/pacman.d/gnupg/trustdb.gpg: trustdb created
+gpg: no ultimately trusted keys found
+gpg: starting migration from earlier GnuPG versions
+gpg: porting secret keys from '/etc/pacman.d/gnupg/secring.gpg' to gpg-agent
+gpg: migration succeeded
+gpg: Generating pacman keyring master key...
+gpg: directory '/etc/pacman.d/gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/etc/pacman.d/gnupg/openpgp-revocs.d/F8C501CB420910D6795F96E646664F7C3E1D7BBF.rev'
+gpg: Done
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
+gpg: setting ownertrust to 4
+gpg: setting ownertrust to 4
+gpg: setting ownertrust to 4
+gpg: setting ownertrust to 4
+gpg: setting ownertrust to 4
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   1  signed:   5  trust: 0-, 0q, 0n, 0m, 0f, 1u
+gpg: depth: 1  valid:   5  signed:   7  trust: 0-, 0q, 0n, 5m, 0f, 0u
+gpg: depth: 2  valid:   4  signed:   2  trust: 4-, 0q, 0n, 0m, 0f, 0u
+gpg: next trustdb check due at 2024-10-07
+gpg: error retrieving 'alexey.pawlow@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key F40D263ECA25678A: "Alexey Pavlov (Alexpux) <alexey.pawlow@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: error retrieving 'david.macek.0@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key 790AE56A1D3CFDDC: "David Macek (MSYS2 master key) <david.macek.0@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: error retrieving 'martellmalone@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key DA7EF2ABAEEA755C: "Martell Malone (martell) <martellmalone@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: error retrieving 'reiter.christoph@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key 755B8182ACD22879: "Christoph Reiter (MSYS2 master key) <reiter.christoph@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: error retrieving 'icquinteiro@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key 9F418C233E652008: "Ignacio Casal Quinteiro <icquinteiro@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: error retrieving 'mingw.android@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key BBE514E53E0D0813: "Ray Donnelly (MSYS2 Developer - master key) <mingw.android@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: error retrieving 'alexpux@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key 5F92EFC1A47D45A1: "Alexey Pavlov (Alexpux) <alexpux@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: error retrieving 'david.macek.0@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key 974C8BE49078F532: "David Macek <david.macek.0@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: error retrieving 'reiter.christoph@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key FA11531AA0AA7F57: "Christoph Reiter (MSYS2 development key) <reiter.christoph@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: no valid OpenPGP data found.
+gpg: Total number processed: 0
+gpg: error retrieving 'me@martellmalone.com' via WKD: No fingerprint
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key 794DCF97F93FC717: "Martell Malone (martell) <me@martellmalone.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: error retrieving 'martellmalone@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key D595C9AB2C51581E: "Martell Malone (MSYS2 Developer) <martellmalone@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: error retrieving 'mingw.android@gmail.com' via WKD: No data
+gpg: error reading key: No data
+gpg: refreshing 1 key from hkps://keyserver.ubuntu.com
+gpg: key 4DF3B7664CA56930: "Ray Donnelly (MSYS2 Developer) <mingw.android@gmail.com>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+[1;32mInitial setup complete. MSYS2 is now ready to use.[1;0m
+
+[102021] Done
+[102035] Writing maintenance tool: "C:/msys64/uninstall.exe.new"
+[102035] Writing maintenance tool.
+[102509] Wrote permissions for maintenance tool.
+[102574] Maintenance tool hard restart: false.
+[102576] Installation finished!
+[110807] starting "C:/msys64/ucrt64.exe" QList()

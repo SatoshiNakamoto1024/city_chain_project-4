@@ -1,43 +1,61 @@
 version: '3.8'
 services:
   global_main_chain:
-    build: ./global_main_chain
+    build:
+      context: .
+      dockerfile: global_main_chain/Dockerfile
     ports:
       - "8000:8000"
     volumes:
       - ./global_main_chain:/usr/src/app
     depends_on:
       - lattice_signer_service
+    environment:
+      - RUST_LOG=debug
 
   continental_main_chain:
-    build: ./continental_main_chain
+    build:
+      context: .
+      dockerfile: continental_main_chain/Dockerfile
     ports:
       - "8001:8000"
     volumes:
       - ./continental_main_chain:/usr/src/app
     depends_on:
       - global_main_chain
+    environment:
+      - RUST_LOG=debug
 
   municipal_chain:
-    build: ./municipal_chain
+    build:
+      context: .
+      dockerfile: municipal_chain/Dockerfile
     ports:
       - "8002:8000"
     volumes:
       - ./municipal_chain:/usr/src/app
     depends_on:
       - continental_main_chain
+    environment:
+      - RUST_LOG=debug
 
   dapps:
-    build: ./dapps
+    build:
+      context: .
+      dockerfile: dapps/Dockerfile
     ports:
       - "5000:5000"
     volumes:
       - ./dapps:/usr/src/app
     depends_on:
       - municipal_chain
+    environment:
+      - FLASK_ENV=development
 
   lattice_signer_service:
-    build: ./lattice_signer_service
+    build:
+      context: .
+      dockerfile: lattice_signer_service/Dockerfile
     ports:
       - "5001:5001"
     volumes:
@@ -46,9 +64,11 @@ services:
       - ntru
 
   mobile_app:
-    build: ./mobile_app
+    build:
+      context: .
+      dockerfile: mobile_app/Dockerfile
     ports:
-      - "3000:3000"
+      - "8081:8081"
     volumes:
       - ./mobile_app:/usr/src/app
     depends_on:

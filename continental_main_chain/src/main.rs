@@ -1,19 +1,21 @@
+// 必要なモジュールのインポート
 #[macro_use] extern crate rocket;
-#[macro_use] extern crate serde;
-
-use rocket::serde::{json::Json, Deserialize, Serialize};
-use rocket::tokio::sync::Mutex;
+use rocket::{get, post, routes, serde::json::Json, tokio::sync::Mutex, State};
+use rocket::serde::{Deserialize, Serialize};
 use rocket::http::Status;
 use rocket::config::{Config, TlsConfig};
 use std::sync::Arc;
 use chrono::{DateTime, Utc};
 use reqwest::Client;
-use rand::Rng;
+use rand::{Rng, prelude::SliceRandom};
 use sha2::{Sha256, Digest};
 use hex;
-use ntru::{NtruEncrypt, NtruSign, NtruParam};
 
-#[derive(Serialize, Deserialize, Clone)]
+use ntru::ntru_encrypt::NtruEncrypt;
+use ntru::ntru_sign::NtruSign;
+use ntru::ntru_param::NtruParam;
+
+#[derive(Serialize, Deserialize, Debug, Clone)] // Debug を追加
 struct Block {
     index: u64,
     timestamp: DateTime<Utc>,
@@ -24,15 +26,18 @@ struct Block {
     signature: Vec<u8>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, Clone)] // Debug を追加
 struct Transaction {
     sender: String,
     receiver: String,
     amount: f64,
     verifiable_credential: String,
     signature: Vec<u8>,
+    transaction_id: String,
+    timestamp: String,
 }
 
+// Blockchain型の定義
 type Blockchain = Arc<Mutex<Vec<Block>>>;
 
 struct DPoS {
@@ -156,8 +161,14 @@ impl Transaction {
     }
 }
 
+// 新しくルートを追加
+#[get("/")]
+fn index() -> &'static str {
+    "Welcome to the Continental Main Chain!"
+}
+
 #[post("/transaction", format = "json", data = "<transaction>")]
-async fn create_transaction(transaction: Json<Transaction>, client: &rocket::State<Client>) -> Json<Transaction> {
+async fn create_transaction(transaction: Json<Transaction>, client: &State<Client>) -> Json<Transaction> {
     // トランザクション作成ロジック
     let global_chain_url = "http://global_main_chain:8000/transaction";
     let res = client.post(global_chain_url)
@@ -173,12 +184,14 @@ async fn create_transaction(transaction: Json<Transaction>, client: &rocket::Sta
             amount: 0.0,
             verifiable_credential: "error".to_string(),
             signature: vec![],
+            transaction_id: "error".to_string(),
+            timestamp: "error".to_string(),
         }),
     }
 }
 
 #[post("/add_block", format = "json", data = "<block>")]
-async fn add_block(block: Json<Block>, chain: &rocket::State<Blockchain>, client: &rocket::State<Client>) -> Status {
+async fn add_block(block: Json<Block>, chain: &State<Blockchain>, client: &State<Client>) -> Status {
     let mut chain = chain.lock().await;
     let block = block.into_inner();
 
@@ -204,9 +217,15 @@ async fn add_block(block: Json<Block>, chain: &rocket::State<Blockchain>, client
 }
 
 #[get("/chain")]
-async fn get_chain(chain: &rocket::State<Blockchain>) -> Json<Vec<Block>> {
+async fn get_chain(chain: &State<Blockchain>) -> Json<Vec<Block>> {
     let chain = chain.lock().await;
     Json(chain.clone())
+}
+
+// 署名の検証関数の実装を追加
+fn verify_signature(data: &[u8], signature: &[u8], credential: &[u8]) -> bool {
+    // 実際の署名検証ロジックをここに実装する
+    true
 }
 
 #[rocket::main]
@@ -214,15 +233,15 @@ async fn main() {
     let chain = Arc::new(Mutex::new(Vec::<Block>::new()));
 
     // SSL設定
-    let tls_config = TlsConfig::from_paths("cert.pem", "key.pem");
+    let tls_config = TlsConfig::from_paths("cert.crt", "key.pem");
     let config = Config::figment()
-        .merge(("tls.certs", "cert.pem"))
+        .merge(("tls.certs", "cert.crt"))
         .merge(("tls.key", "key.pem"));
-
+        
     rocket::custom(config)
         .manage(chain)
         .manage(Client::new())
-        .mount("/", routes![create_transaction, add_block, get_chain])
+        .mount("/", routes![index, create_transaction, add_block, get_chain]) // インデックスルートをマウント
         .launch()
         .await
         .unwrap();

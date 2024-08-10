@@ -1,18 +1,22 @@
 #[macro_use] extern crate rocket;
 
-use rocket::serde::{json::Json, Deserialize, Serialize};
+use rocket::serde::{json::Json, Deserialize, Serialize}; // ここでrocketのserdeをインポート
 use rocket::tokio::sync::Mutex;
 use rocket::http::Status;
 use rocket::config::{Config, TlsConfig};
 use std::sync::Arc;
 use chrono::{DateTime, Utc};
 use reqwest::Client;
-use ntru::{NtruEncrypt, NtruSign, NtruParam};
-use rand::rngs::OsRng;
+use rand::{Rng, prelude::SliceRandom};
 use sha2::{Sha256, Digest};
 use std::collections::HashMap;
 
-#[derive(Serialize, Deserialize, Clone)]
+use ntru::ntru_encrypt::NtruEncrypt;
+use ntru::ntru_sign::NtruSign;
+use ntru::ntru_param::NtruParam;
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(crate = "rocket::serde")]
 struct Block {
     index: u64,
     timestamp: DateTime<Utc>,
@@ -23,7 +27,8 @@ struct Block {
     signature: Vec<u8>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
+#[serde(crate = "rocket::serde")]
 struct Transaction {
     sender: String,
     receiver: String,
@@ -33,6 +38,7 @@ struct Transaction {
     location: (f64, f64),
     timestamp: DateTime<Utc>,
     proof_of_place: String,
+    transaction_id: String,
 }
 
 type Blockchain = Arc<Mutex<Vec<Block>>>;
@@ -167,6 +173,7 @@ impl Transaction {
             location,
             timestamp: Utc::now(),
             proof_of_place: String::new(),
+            transaction_id: "0".to_string(),
         };
         transaction.proof_of_place = ProofOfPlace::new(location).generate_proof();
         transaction
@@ -182,6 +189,41 @@ impl Transaction {
         let computed_signature = hex::encode(Sha256::digest(format!("{:?}", self).as_bytes()));
         self.signature == computed_signature.into_bytes()
     }
+}
+
+// 使用例追加
+fn generate_random_data() -> Vec<u8> {
+    let mut rng = rand::thread_rng();
+    (0..10).map(|_| rng.gen()).collect()
+}
+
+fn shuffle_municipalities(municipalities: &mut Vec<String>) {
+    municipalities.shuffle(&mut rand::thread_rng());
+}
+
+fn calculate_sha256(data: &[u8]) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(data);
+    format!("{:x}", hasher.finalize())
+}
+
+fn create_transaction_map() -> HashMap<String, Transaction> {
+    let mut map = HashMap::new();
+    let transaction = Transaction::new(
+        "sender1".to_string(),
+        "receiver1".to_string(),
+        10.0,
+        "verifiable_credential1".to_string(),
+        (37.7749, -122.4194),
+    );
+    map.insert(transaction.transaction_id.clone(), transaction);
+    map
+}
+
+// インデックスページを追加
+#[get("/")]
+fn index() -> &'static str {
+    "Welcome to the Municipal Chain!"
 }
 
 #[post("/transaction", format = "json", data = "<transaction>")]
@@ -207,6 +249,7 @@ async fn create_transaction(transaction: Json<Transaction>, client: &rocket::Sta
             location: (0.0, 0.0),
             timestamp: Utc::now(),
             proof_of_place: "error".to_string(),
+            transaction_id: "error".to_string(),
         }),
     }
 }
@@ -214,11 +257,12 @@ async fn create_transaction(transaction: Json<Transaction>, client: &rocket::Sta
 #[post("/add_block", format = "json", data = "<block>")]
 async fn add_block(block: Json<Block>, chain: &rocket::State<Blockchain>, client: &rocket::State<Client>) -> Status {
     let mut chain = chain.lock().await;
+    let block_clone = block.clone();  // ここでクローンを作成
     chain.push(block.into_inner());
 
     let global_chain_url = "http://global_main_chain:8000/add_block";
     let res = client.post(global_chain_url)
-                    .json(&*block)
+                    .json(&*block_clone)  // クローンを使用
                     .send()
                     .await;
 
@@ -238,15 +282,15 @@ async fn get_chain(chain: &rocket::State<Blockchain>) -> Json<Vec<Block>> {
 async fn main() {
     let chain = Arc::new(Mutex::new(Vec::<Block>::new()));
 
-    let tls_config = TlsConfig::from_paths("cert.pem", "key.pem");
+    let tls_config = TlsConfig::from_paths("cert.crt", "key.pem");
     let config = Config::figment()
-        .merge(("tls.certs", "cert.pem"))
+        .merge(("tls.certs", "cert.crt"))
         .merge(("tls.key", "key.pem"));
 
     rocket::custom(config)
         .manage(chain)
         .manage(Client::new())
-        .mount("/", routes![create_transaction, add_block, get_chain])
+        .mount("/", routes![index, create_transaction, add_block, get_chain]) // ここにインデックスページを追加
         .launch()
         .await
         .unwrap();

@@ -37,4 +37,8 @@ fn main() {
     proof_of_history.add_event("Event 3");
     let history_hash = proof_of_history.generate_hash();
     println!("Proof of History Hash: {:?}", history_hash);
+
+    // 現在の時間を表示
+    let current_time = Utc::now();
+    println!("Current time: {:?}", current_time);
 }
