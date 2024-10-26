@@ -3,3 +3,4 @@
 path/to/mongodb-windows-x86_64-7.0.14-signed.msi filter=lfs diff=lfs merge=lfs -text
 OpenSSL-Win64/lib/VC/x64/MT/libcrypto_static.lib filter=lfs diff=lfs merge=lfs -text
 OpenSSL-Win64/lib/VC/x64/MD/libcrypto_static.lib filter=lfs diff=lfs merge=lfs -text
+mongodb-windows-x86_64-7.0.14-signed.msi filter=lfs diff=lfs merge=lfs -text
