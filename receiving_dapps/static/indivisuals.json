@@ -1,0 +1,897 @@
+[
+    {
+        "name": "山田太郎",
+        "date_of_birth": "1973/10/24",
+        "age": 50,
+        "my_number": "********",
+        "municipality": "Asia-Komatsu",
+        "membership_flag1": "株式会社サンプル",
+        "membership_flag2": "株式会社副業",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["能美を綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "山田太郎": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社サンプル": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業": "腎臓"
+            },
+            "fourth_dimension": {
+                "能美を綺麗にしよう会": "右手",
+                "小松を盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "石川県": "右足"
+            },
+            "sixth_dimension": {
+                "日本": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "山田花子",
+        "date_of_birth": "1972/7/21",
+        "age": 51,
+        "my_number": "********",
+        "municipality": "Asia-Komatsu",
+        "membership_flag1": "株式会社シンプル",
+        "membership_flag2": "株式会社副業V",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["能美を綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "山田花子": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社シンプル": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業V": "腎臓"
+            },
+            "fourth_dimension": {
+                "能美を綺麗にしよう会": "右手",
+                "小松を盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "石川県": "右足"
+            },
+            "sixth_dimension": {
+                "日本": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "山下澄子",
+        "date_of_birth": "1973/7/21",
+        "age": 51,
+        "my_number": "********",
+        "municipality": "Asia-Komatsu",
+        "membership_flag1": "株式会社シンプル",
+        "membership_flag2": "株式会社副業V",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["能美を綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "山田花子": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社シンプル": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業V": "腎臓"
+            },
+            "fourth_dimension": {
+                "能美を綺麗にしよう会": "右手",
+                "小松を盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "石川県": "右足"
+            },
+            "sixth_dimension": {
+                "日本": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "山川育子",
+        "date_of_birth": "1973/5/21",
+        "age": 51,
+        "my_number": "********",
+        "municipality": "Asia-Komatsu",
+        "membership_flag1": "株式会社リップル",
+        "membership_flag2": "株式会社副業V",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["能美を綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "山田花子": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社シンプル": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業V": "腎臓"
+            },
+            "fourth_dimension": {
+                "能美を綺麗にしよう会": "右手",
+                "小松を盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "石川県": "右足"
+            },
+            "sixth_dimension": {
+                "日本": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "田中尚人",
+        "date_of_birth": "1981/10/2",
+        "age": 41,
+        "my_number": "********",
+        "municipality": "Asia-Komatsu",
+        "membership_flag1": "株式会社デザイン",
+        "membership_flag2": "株式会社いいね",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["能美を綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "田中尚人": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社デザイン": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社いいね": "腎臓"
+            },
+            "fourth_dimension": {
+                "能美を綺麗にしよう会": "右手",
+                "小松を盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "石川県": "右足"
+            },
+            "sixth_dimension": {
+                "日本": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "竹下登",
+        "date_of_birth": "1963/10/4",
+        "age": 60,
+        "my_number": "********",
+        "municipality": "Asia-Kanazawa",
+        "membership_flag1": "株式会社四プル",
+        "membership_flag2": "株式会社副業S",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["能美を綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "竹下登": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社四プル": "脊髄",
+                "寺小屋C": "左手",
+                "株式会社副業S": "腎臓"
+            },
+            "fourth_dimension": {
+                "能美を綺麗にしよう会": "右手",
+                "小松を盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "石川県": "右足"
+            },
+            "sixth_dimension": {
+                "日本": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "竹川茂樹",
+        "date_of_birth": "1973/10/4",
+        "age": 51,
+        "my_number": "********",
+        "municipality": "Asia-Kanazawa",
+        "membership_flag1": "株式会社刺激",
+        "membership_flag2": "株式会社副業S",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["金沢を綺麗にしよう会","みんなの畑"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "竹下登": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社四プル": "脊髄",
+                "寺小屋C": "左手",
+                "株式会社副業S": "腎臓"
+            },
+            "fourth_dimension": {
+                "能美を綺麗にしよう会": "右手",
+                "小松を盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "石川県": "右足"
+            },
+            "sixth_dimension": {
+                "日本": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "武田鉄也",
+        "date_of_birth": "1963/11/4",
+        "age": 60,
+        "my_number": "********",
+        "municipality": "Asia-Kanazawa",
+        "membership_flag1": "株式会社四プル",
+        "membership_flag2": "株式会社副業S",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["能美を綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "竹下登": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社四プル": "脊髄",
+                "寺小屋C": "左手",
+                "株式会社副業S": "腎臓"
+            },
+            "fourth_dimension": {
+                "能美を綺麗にしよう会": "右手",
+                "小松を盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "石川県": "右足"
+            },
+            "sixth_dimension": {
+                "日本": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "竹村茂",
+        "date_of_birth": "1963/1/24",
+        "age": 60,
+        "my_number": "********",
+        "municipality": "Asia-Kanazawa",
+        "membership_flag1": "株式会社語プル",
+        "membership_flag2": "株式会社副業B",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["能美を綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "竹村茂": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社語プル": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業B": "腎臓"
+            },
+            "fourth_dimension": {
+                "能美を綺麗にしよう会": "右手",
+                "小松を盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "石川県": "右足"
+            },
+            "sixth_dimension": {
+                "日本": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "山村花江",
+        "date_of_birth": "1993/1/4",
+        "age": 30,
+        "my_number": "********",
+        "municipality": "Asia-Kanazawa",
+        "membership_flag1": "株式会社電気",
+        "membership_flag2": "株式会社副業N",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["能美を綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "山村花江": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社電気": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業N": "腎臓"
+            },
+            "fourth_dimension": {
+                "能美を綺麗にしよう会": "右手",
+                "小松を盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "石川県": "右足"
+            },
+            "sixth_dimension": {
+                "日本": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "Aさん",
+        "date_of_birth": "1993/3/2",
+        "age": 30,
+        "my_number": "********",
+        "municipality": "Europe-Sligo",
+        "membership_flag1": "株式会社グラスフェット",
+        "membership_flag2": "株式会社副業K",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["スライゴを綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "Aさん": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社グラスフェット": "心臓",
+                "寺小屋A": "左手",
+                "株式会社副業K": "腎臓"
+            },
+            "fourth_dimension": {
+                "スライゴを綺麗にしよう会": "右手",
+                "ゴートを盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "スライゴ県": "右足"
+            },
+            "sixth_dimension": {
+                "アイルランド": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "Bさん",
+        "date_of_birth": "1991/1/2",
+        "age": 28,
+        "my_number": "********",
+        "municipality": "Europe-Sligo",
+        "membership_flag1": "株式会社ソラネ",
+        "membership_flag2": "株式会社副業Q",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["スライゴを綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "Bさん": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社ソラネ": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業Q": "腎臓"
+            },
+            "fourth_dimension": {
+                "スライゴを綺麗にしよう会": "右手",
+                "ゴートを盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "スライゴ県": "右足"
+            },
+            "sixth_dimension": {
+                "アイルランド": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "Cさん",
+        "date_of_birth": "1973/1/24",
+        "age": 50,
+        "my_number": "********",
+        "municipality": "Europe-Sligo",
+        "membership_flag1": "株式会社サンプルネ",
+        "membership_flag2": "株式会社副業I",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["スライゴを綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "Cさん": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社サンプルネ": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業I": "腎臓"
+            },
+            "fourth_dimension": {
+                "スライゴを綺麗にしよう会": "右手",
+                "ゴートを盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "スライゴ県": "右足"
+            },
+            "sixth_dimension": {
+                "アイルランド": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "Dさん",
+        "date_of_birth": "1953/10/24",
+        "age": 70,
+        "my_number": "********",
+        "municipality": "NorthAmerica-Boston",
+        "membership_flag1": "株式会社フェイスブック",
+        "membership_flag2": "株式会社副業Y",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["ボストンを綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "Dさん": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社フェイスブック": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業Y": "腎臓"
+            },
+            "fourth_dimension": {
+                "ボストンを綺麗にしよう会": "右手",
+                "マサチューセッツを盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "マサチューセッツ州": "右足"
+            },
+            "sixth_dimension": {
+                "America": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "Eさん",
+        "date_of_birth": "1943/10/24",
+        "age": 80,
+        "my_number": "********",
+        "municipality": "NorthAmerica-Boston",
+        "membership_flag1": "株式会社フェイスブック",
+        "membership_flag2": "株式会社副業U",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["ボストンを綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "Eさん": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社フェイスブック": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業U": "腎臓"
+            },
+            "fourth_dimension": {
+                "ボストンを綺麗にしよう会": "右手",
+                "マサチューセッツを盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "マサチューセッツ州": "右足"
+            },
+            "sixth_dimension": {
+                "America": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    },
+
+    {
+        "name": "Fさん",
+        "date_of_birth": "1983/1/4",
+        "age": 40,
+        "my_number": "********",
+        "municipality": "NorthAmerica-Boston",
+        "membership_flag1": "株式会社アマゾン",
+        "membership_flag2": "株式会社副業T",
+        "membership_flag3": "",
+        "declared_love_currency": 1000,
+        "love_currency_counts": [10, 22, 30, 40, 50, 60, 70, 8, 90, 20],
+        "flactuation_flags": {
+            "fourth_dimension": ["ボストンを綺麗にしよう会","みんなの畑南加賀"],
+            "ninth_dimension": "地球を救おう会"
+        },
+        "roles": {
+            "first_dimension": {
+                "Fさん": "脳"
+            },
+            "second_dimension": {
+                "生命体A": "右手",
+                "営業部": "左手",
+                "英会話チーム": "脳"
+            },
+            "third_dimension": {
+                "株式会社アマゾン": "脊髄",
+                "寺小屋A": "左手",
+                "株式会社副業T": "腎臓"
+            },
+            "fourth_dimension": {
+                "ボストンを綺麗にしよう会": "右手",
+                "マサチューセッツを盛り上げよう会": "左手",
+                "みんなの畑南加賀": "脳"
+            },
+            "fifth_dimension": {
+                "マサチューセッツ州": "右足"
+            },
+            "sixth_dimension": {
+                "America": "左足"
+            },
+            "seventh_dimension": {
+                "世界経済": "膵臓"
+            },
+            "eighth_dimension": {
+                "人類": "心臓"
+            },
+            "ninth_dimension": {
+                "地球": "右手",
+                "地球を救おう会": "脳"
+            },
+            "tenth_dimension": {
+                "太陽系": "左手"
+            }
+        }
+    }
+]

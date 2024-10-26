@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>受信用Dapp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #update-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: red;
+        }
+        /* フォームのスタイル */
+        #selection-form {
+            margin-bottom: 20px;
+        }
+        #selection-form label {
+            display: inline-block;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        #selection-form select {
+            padding: 5px;
+            margin-bottom: 10px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>受信用Dapp</h1>
+
+    <!-- ユーザー情報の選択フォーム -->
+    <div id="selection-form">
+        <label for="continent_city">大陸-市町村名:</label>
+        <select id="continent_city" name="continent_city">
+            <option value="">-- 大陸-市町村名を選択 --</option>
+        </select><br>
+
+        <label for="receiver">受信者名:</label>
+        <select id="receiver" name="receiver" disabled>
+            <option value="">-- 受信者を選択 --</option>
+        </select><br>
+
+        <button id="update-button" disabled>最新の状態に更新</button>
+    </div>
+
+    <table id="transactions-table">
+        <thead>
+            <tr>
+                <th>トランザクションID</th>
+                <th>送信者</th>
+                <th>受信者</th>
+                <th>金額</th>
+                <th>タイプ</th>
+                <th>作成日時</th>
+                <th>アクション</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- トランザクションがここに表示されます -->
+        </tbody>
+    </table>
+
+    <div id="message"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // トークンの有無をチェック
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                // トークンがなければログインページにリダイレクト
+                alert('ログインが必要です。');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            // 初期データの読み込み
+            initializeContinentCitySelect();
+
+            // イベントリスナーの設定
+            document.getElementById('continent_city').addEventListener('change', handleContinentCityChange);
+            document.getElementById('receiver').addEventListener('change', handleReceiverChange);
+            document.getElementById('update-button').addEventListener('click', fetchPendingTransactions);
+
+            // 大陸-市町村名の選択リストを初期化
+            async function initializeContinentCitySelect() {
+                try {
+                    // municipalities.json をAWS S3から取得
+                    const municipalitiesS3Url = 'https://citychainprojectreceive.s3.ap-southeast-2.amazonaws.com/municipalities.json'; // 実際のS3 URLに置き換えてください
+                    const municipalitiesResponse = await fetch(municipalitiesS3Url);
+                    if (!municipalitiesResponse.ok) {
+                        throw new Error(`HTTP error! status: ${municipalitiesResponse.status}`);
+                    }
+                    const municipalitiesData = await municipalitiesResponse.json();
+
+                    const continentCitySelect = document.getElementById('continent_city');
+                    continentCitySelect.innerHTML = '<option value="">-- 大陸-市町村名を選択 --</option>'; // 既存のオプションをクリア
+
+                    // 大陸ごとの市町村をリストに追加
+                    for (const [continent, data] of Object.entries(municipalitiesData)) {
+                        data.cities.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = `${continent}-${city.name}`;
+                            option.textContent = `${continent}-${city.name}`;
+                            continentCitySelect.appendChild(option);
+                        });
+                    }
+                } catch (error) {
+                    console.error('municipalities.json の取得に失敗しました:', error);
+                    document.getElementById('message').textContent = '大陸-市町村名の取得に失敗しました。';
+                }
+            }
+
+            // 大陸-市町村名が選択されたときの処理
+            async function handleContinentCityChange() {
+                const selectedValue = this.value;
+                const receiverSelect = document.getElementById('receiver');
+                const updateButton = document.getElementById('update-button');
+
+                if (selectedValue) {
+                    // 個人名のリストを取得
+                    try {
+                        // indivisuals.json をFlaskのstaticフォルダから取得
+                        const individualsResponse = await fetch('/static/indivisuals.json');
+                        if (!individualsResponse.ok) {
+                            throw new Error(`HTTP error! status: ${individualsResponse.status}`);
+                        }
+                        const individualsData = await individualsResponse.json();
+
+                        // 選択された大陸-市町村に基づいて個人をフィルタリング
+                        const filteredIndividuals = individualsData.filter(ind => ind.municipality === selectedValue);
+
+                        // 受信者名のリストを更新
+                        receiverSelect.innerHTML = '<option value="">-- 受信者を選択 --</option>'; // 既存のオプションをクリア
+                        filteredIndividuals.forEach(individual => {
+                            const option = document.createElement('option');
+                            option.value = individual.name;
+                            option.textContent = individual.name;
+                            receiverSelect.appendChild(option);
+                        });
+
+                        // 受信者の選択を有効化
+                        receiverSelect.disabled = false;
+                        updateButton.disabled = true; // 受信者が選択されるまでボタンを無効化
+                        clearTransactionsTable();
+                        document.getElementById('message').textContent = '';
+                    } catch (error) {
+                        console.error('indivisuals.json の取得に失敗しました:', error);
+                        document.getElementById('message').textContent = '受信者情報の取得に失敗しました。';
+                        receiverSelect.innerHTML = '<option value="">-- 受信者を選択 --</option>';
+                        receiverSelect.disabled = true;
+                        updateButton.disabled = true;
+                    }
+                } else {
+                    // 選択が解除された場合
+                    receiverSelect.innerHTML = '<option value="">-- 受信者を選択 --</option>';
+                    receiverSelect.disabled = true;
+                    updateButton.disabled = true;
+                    clearTransactionsTable();
+                    document.getElementById('message').textContent = '';
+                }
+            }
+
+            // 受信者が選択されたときの処理
+            function handleReceiverChange() {
+                const selectedReceiver = this.value;
+                const updateButton = document.getElementById('update-button');
+
+                if (selectedReceiver) {
+                    updateButton.disabled = false; // ボタンを有効化
+                } else {
+                    updateButton.disabled = true; // ボタンを無効化
+                    clearTransactionsTable();
+                }
+            }
+
+            // トランザクションのテーブルをクリア
+            function clearTransactionsTable() {
+                const tbody = document.querySelector('#transactions-table tbody');
+                tbody.innerHTML = '';
+                document.getElementById('message').textContent = '';
+            }
+
+            // トランザクションを取得して表示する関数
+            async function fetchPendingTransactions() {
+                const receiver = document.getElementById('receiver').value;
+                const receiver_municipality = document.getElementById('continent_city').value;
+
+                if (!receiver || !receiver_municipality) {
+                    alert('受信者名と受信者の大陸-市町村名を選択してください。');
+                    return;
+                }
+
+                try {
+                    const token = localStorage.getItem('authToken');
+                    if (!token) {
+                        alert('ログインが必要です。');
+                        window.location.href = '/login.html';
+                        return;
+                    }
+
+                    const response = await fetch(`/api/pending_transactions?receiver=${encodeURIComponent(receiver)}&receiver_municipality=${encodeURIComponent(receiver_municipality)}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`  // トークンをヘッダーに追加
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+
+                    const tbody = document.querySelector('#transactions-table tbody');
+                    tbody.innerHTML = ''; // 既存の行をクリア
+                    document.getElementById('message').textContent = ''; // メッセージをクリア
+
+                    if (data.length === 0) {
+                        const row = document.createElement('tr');
+                        const cell = document.createElement('td');
+                        cell.colSpan = 7;
+                        cell.textContent = '保留中のトランザクションはありません。';
+                        row.appendChild(cell);
+                        tbody.appendChild(row);
+                        return;
+                    }
+
+                    data.forEach(tx => {
+                        const row = document.createElement('tr');
+
+                        // トランザクションID
+                        const idCell = document.createElement('td');
+                        idCell.textContent = tx.transaction_id;
+                        row.appendChild(idCell);
+
+                        // 送信者
+                        const senderCell = document.createElement('td');
+                        senderCell.textContent = tx.sender;
+                        row.appendChild(senderCell);
+
+                        // 受信者
+                        const receiverCell = document.createElement('td');
+                        receiverCell.textContent = tx.receiver;
+                        row.appendChild(receiverCell);
+
+                        // 金額
+                        const amountCell = document.createElement('td');
+                        amountCell.textContent = tx.amount;
+                        row.appendChild(amountCell);
+
+                        // タイプ
+                        const typeCell = document.createElement('td');
+                        typeCell.textContent = tx.transaction_type;
+                        row.appendChild(typeCell);
+
+                        // 作成日時
+                        const timestampCell = document.createElement('td');
+                        timestampCell.textContent = new Date(tx.created_at).toLocaleString();
+                        row.appendChild(timestampCell);
+
+                        // アクションボタン
+                        const actionCell = document.createElement('td');
+                        const receiveButton = document.createElement('button');
+                        receiveButton.textContent = '受信する';
+                        receiveButton.addEventListener('click', () => receiveTransaction(tx.transaction_id, receiver_municipality));
+                        actionCell.appendChild(receiveButton);
+                        row.appendChild(actionCell);
+
+                        tbody.appendChild(row);
+                    });
+                } catch (error) {
+                    console.error('トランザクションの取得に失敗しました:', error);
+                    document.getElementById('message').textContent = 'トランザクションの取得に失敗しました。';
+                }
+            }
+
+            // トランザクションを受信する関数
+            async function receiveTransaction(transaction_id, receiver_municipality) {
+                if (!confirm(`トランザクション ${transaction_id} を受信しますか？`)) {
+                    return;
+                }
+
+                try {
+                    const token = localStorage.getItem('authToken');
+                    if (!token) {
+                        alert('ログインが必要です。');
+                        window.location.href = '/login.html';
+                        return;
+                    }
+
+                    const response = await fetch('/api/receive_transaction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`  // トークンをヘッダーに追加
+                        },
+                        body: JSON.stringify({ transaction_id, receiver_municipality })
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        document.getElementById('message').textContent = `トランザクション ${transaction_id} を受信しました。`;
+                        fetchPendingTransactions(); // テーブルを更新
+                    } else {
+                        const errorData = await response.json();
+                        document.getElementById('message').textContent = `エラー: ${errorData.message}`;
+                    }
+                } catch (error) {
+                    console.error('トランザクションの受信に失敗しました:', error);
+                    document.getElementById('message').textContent = 'トランザクションの受信に失敗しました。';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

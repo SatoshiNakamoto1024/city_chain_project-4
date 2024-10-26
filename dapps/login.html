@@ -1,0 +1,71 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ログイン</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        form {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        input[type="text"], input[type="password"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h2>ログイン</h2>
+    <form id="login-form">
+        <input type="text" id="username" name="username" placeholder="ユーザー名" required>
+        <input type="password" id="password" name="password" placeholder="パスワード" required>
+        <input type="submit" value="ログイン">
+    </form>
+    <div id="message"></div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('authToken', data.token); // トークンを保存
+                    window.location.href = '/dapps_index.html'; // 認証成功時に遷移
+                } else {
+                    document.getElementById('message').textContent = `エラー: ${data.message}`;
+                }
+            } catch (error) {
+                document.getElementById('message').textContent = 'ログインに失敗しました。';
+                console.error('ログインエラー:', error);
+            }
+        });
+    </script>
+</body>
+</html>

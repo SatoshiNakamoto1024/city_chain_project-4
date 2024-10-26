@@ -16,6 +16,9 @@ hex = "0.4"
 ntru = { path = "../ntru" }
 openssl = { version = "0.10", features = ["vendored"] }
 openssl-sys = "0.9"
+mongodb = "2.1.0"  # MongoDB のバージョンを指定
+bson = "2.0"
+immudb_proto = { path = "../immudb_proto" }
 
 [patch.crates-io]
 openssl-src = { path = "local_openssl_src" }

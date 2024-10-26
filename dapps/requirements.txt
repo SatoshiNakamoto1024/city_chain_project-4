@@ -1,8 +1,11 @@
 Flask==2.0.3
-requests
 qrcode[pil]
 speechrecognition
 pycryptodome
 numpy
 cryptography
 pytz
+flask-cors==3.0.10
+pymongo==3.11.4
+requests==2.25.1
+serde==1.0.126

@@ -5,40 +5,189 @@ services:
       context: .
       dockerfile: global_main_chain/Dockerfile
     ports:
-      - "8000:8000"
+      - "1999:1999"
     volumes:
       - ./global_main_chain:/usr/src/app
+      - ./data/global_main_chain:/data/global_main_chain  # 永続化用
     depends_on:
       - lattice_signer_service
     environment:
       - RUST_LOG=debug
 
-  continental_main_chain:
+  # 各大陸のcontinental_main_chain
+  continental_main_chain_asia:
     build:
       context: .
       dockerfile: continental_main_chain/Dockerfile
     ports:
-      - "8001:8000"
+      - "1024:1024"
     volumes:
       - ./continental_main_chain:/usr/src/app
+      - ./data/continental_main_chain/asia:/data/continental_main_chain/asia  # 永続化用
     depends_on:
       - global_main_chain
     environment:
       - RUST_LOG=debug
 
-  municipal_chain:
+  continental_main_chain_europe:
+    build:
+      context: .
+      dockerfile: continental_main_chain/Dockerfile
+    ports:
+      - "1025:1025"
+    volumes:
+      - ./continental_main_chain:/usr/src/app
+      - ./data/continental_main_chain/europe:/data/continental_main_chain/europe  # 永続化用
+    depends_on:
+      - global_main_chain
+    environment:
+      - RUST_LOG=debug
+
+  # 他の大陸も同様に設定
+  continental_main_chain_australia:
+    build:
+      context: .
+      dockerfile: continental_main_chain/Dockerfile
+    ports:
+      - "1026:1026"
+    volumes:
+      - ./continental_main_chain:/usr/src/app
+      - ./data/continental_main_chain/australia:/data/continental_main_chain/australia  # 永続化用
+    depends_on:
+      - global_main_chain
+    environment:
+      - RUST_LOG=debug
+
+  # 各市町村のmunicipal_chain
+  municipal_chain_kanazawa:
     build:
       context: .
       dockerfile: municipal_chain/Dockerfile
     ports:
-      - "8002:8000"
+      - "2000:2000"
     volumes:
       - ./municipal_chain:/usr/src/app
+      - ./data/municipal_chain/kanazawa:/data/municipal_chain/kanazawa  # 永続化用
     depends_on:
-      - continental_main_chain
+      - continental_main_chain_asia
     environment:
       - RUST_LOG=debug
 
+  # MongoDB サービス (Global大陸用)
+  mongo_global:
+    image: mongo:latest
+    ports:
+      - "19999:27017"
+    volumes:
+      - ./data/mongodb/global:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: global_transactions
+
+  # MongoDB サービス (各大陸用)
+  mongo_asia:
+    image: mongo:latest
+    ports:
+      - "10024:27017"
+    volumes:
+      - ./data/mongodb/asia:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: Asia_transactions
+
+  mongo_analytics_asia:
+    image: mongo:latest
+    ports:
+      - "12024:27017"
+    volumes:
+      - ./data/mongodb/analytics/asia:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: Asia_analytics
+
+  mongo_europe:
+    image: mongo:latest
+    ports:
+      - "10025:27017"
+    volumes:
+      - ./data/mongodb/europe:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: Europe_transactions
+
+  mongo_analytics_europe:
+    image: mongo:latest
+    ports:
+      - "12025:27017"
+    volumes:
+      - ./data/mongodb/analytics/europe:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: Europe_analytics
+
+  # 他の大陸の MongoDBも同様に追加
+  mongo_australia:
+    image: mongo:latest
+    ports:
+      - "10026:27017"
+    volumes:
+      - ./data/mongodb/australia:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: Australia_transactions
+
+  mongo_analytics_australia:
+    image: mongo:latest
+    ports:
+      - "12026:27017"
+    volumes:
+      - ./data/mongodb/analytics/australia:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: Australia_analytics
+
+  # immuDB サービス (Global大陸用)
+  immudb_global:
+    image: codenotary/immudb:latest
+    ports:
+      - "11040:3322"
+    volumes:
+      - ./data/immudb/global:/var/lib/immudb
+    environment:
+      IMMUDB_DATABASE: Global_immudb    
+
+  # immuDB サービス (各大陸用)
+  immudb_asia:
+    image: codenotary/immudb:latest
+    ports:
+      - "11024:3322"
+    volumes:
+      - ./data/immudb/asia:/var/lib/immudb
+    environment:
+      IMMUDB_DATABASE: Asia_immudb
+
+  immudb_europe:
+    image: codenotary/immudb:latest
+    ports:
+      - "11025:3322"
+    volumes:
+      - ./data/immudb/europe:/var/lib/immudb
+    environment:
+      IMMUDB_DATABASE: Europe_immudb
+
+  # 他の大陸の immuDB も同様に追加
+  immudb_australia:
+    image: codenotary/immudb:latest
+    ports:
+      - "11026:3322"
+    volumes:
+      - ./data/immudb/australia:/var/lib/immudb
+    environment:
+      IMMUDB_DATABASE: Australia_immudb
+
+  immudb_africa:
+    image: codenotary/immudb:latest
+    ports:
+      - "11027:3322"
+    volumes:
+      - ./data/immudb/africa:/var/lib/immudb
+    environment:
+      IMMUDB_DATABASE: Africa_immudb
+
+  # dapps
   dapps:
     build:
       context: .
@@ -48,33 +197,52 @@ services:
     volumes:
       - ./dapps:/usr/src/app
     depends_on:
-      - municipal_chain
+      - municipal_chain_kanazawa
+      - municipal_chain_komatsu
     environment:
       - FLASK_ENV=development
 
+  # receiving dapps
+  receiving_dapps:
+    build:
+      context: .
+      dockerfile: receiving_dapps/Dockerfile
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./receiving_dapps:/usr/src/app
+    depends_on:
+      - municipal_chain_kanazawa
+      - municipal_chain_komatsu
+    environment:
+      - FLASK_ENV=development    
+
+  # lattice signer service
   lattice_signer_service:
     build:
       context: .
       dockerfile: lattice_signer_service/Dockerfile
     ports:
-      - "5001:5001"
+      - "5002:5002"
     volumes:
       - ./lattice_signer_service:/usr/src/app
     depends_on:
       - ntru
 
-  mobile_app:
-    build:
-      context: .
-      dockerfile: mobile_app/Dockerfile
-    ports:
-      - "8081:8081"
-    volumes:
-      - ./mobile_app:/usr/src/app
-    depends_on:
-      - dapps
-
   ntru:
     build: ./ntru
     volumes:
       - ./ntru:/usr/src/app
+
+volumes:
+  global_main_chain_data:
+  continental_main_chain_asia_data:
+  continental_main_chain_europe_data:
+  municipal_chain_kanazawa_data:
+  municipal_chain_komatsu_data:
+  mongodb_asia_data:
+  mongodb_europe_data:
+  immudb_asia_data:
+  immudb_europe_data:
+  mongo_analytics_asia_data:
+  mongo_analytics_europe_data:

@@ -3,9 +3,17 @@
 members = [
     "global_main_chain",
     "municipal_chain",
-    "continental_main_chain"
+    "continental_main_chain",
+    "receiving_dapps",   # 新たに receiving_dapps を追加
+    "ntru",              # NTRUのクレートもメンバーとして追加
+    "immudb_proto"       # immudb プロトコルの生成モジュールを追加
 ]
 resolver = "2"
 
 [patch.crates-io]
-openssl-src = { path = "local_openssl_src" }
+openssl-src = { path = "D:/city_chain_project/local_openssl_src" }
+
+# 特定のクレートやローカルのパスに基づいて追加
+[dependencies]
+tonic = { version = "0.7", features = ["tls"] }
+prost = "0.9"

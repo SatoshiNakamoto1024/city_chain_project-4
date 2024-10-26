@@ -1,0 +1,73 @@
+{
+  "send": {
+    "Asia": "mongodb://mongo-asia:10024/Asia_send",
+    "Europe": "mongodb://mongo-europe:10025/Europe_send",
+    "Australia": "mongodb://mongo-australia:10026/Australia_send",
+    "Africa": "mongodb://mongo-africa:10027/Africa_send",
+    "NorthAmerica": "mongodb://mongo-northamerica:10028/NorthAmerica_send",
+    "SouthAmerica": "mongodb://mongo-southamerica:10029/SouthAmerica_send",
+    "Antarctica": "mongodb://mongo-antarctica:10030/Antarctica_send",
+    "Default": "mongodb://mongo-default:27017/Default_send"
+  },
+  "send_pending": {
+    "Asia": "mongodb://mongo-asia:10024/Asia_send_pending",
+    "Europe": "mongodb://mongo-europe:10025/Europe_send_pending",
+    "Australia": "mongodb://mongo-australia:10026/Australia_send_pending",
+    "Africa": "mongodb://mongo-africa:10027/Africa_send_pending",
+    "NorthAmerica": "mongodb://mongo-northamerica:10028/NorthAmerica_send_pending",
+    "SouthAmerica": "mongodb://mongo-southamerica:10029/SouthAmerica_send_pending",
+    "Antarctica": "mongodb://mongo-antarctica:10030/Antarctica_send_pending",
+    "Default": "mongodb://mongo-default:27017/Default_send_pending"
+  },
+  "receive": {
+    "Asia": "mongodb://mongo-asia:10024/Asia_receive",
+    "Europe": "mongodb://mongo-europe:10025/Europe_receive",
+    "Australia": "mongodb://mongo-australia:10026/Australia_receive",
+    "Africa": "mongodb://mongo-africa:10027/Africa_receive",
+    "NorthAmerica": "mongodb://mongo-northamerica:10028/NorthAmerica_receive",
+    "SouthAmerica": "mongodb://mongo-southamerica:10029/SouthAmerica_receive",
+    "Antarctica": "mongodb://mongo-antarctica:10030/Antarctica_receive",
+    "Default": "mongodb://mongo-default:27017/Default_receive"
+  },
+  "receive_pending": {
+    "Asia": "mongodb://mongo-asia:10024/Asia_receive_pending",
+    "Europe": "mongodb://mongo-europe:10025/Europe_receive_pending",
+    "Australia": "mongodb://mongo-australia:10026/Australia_receive_pending",
+    "Africa": "mongodb://mongo-africa:10027/Africa_receive_pending",
+    "NorthAmerica": "mongodb://mongo-northamerica:10028/NorthAmerica_receive_pending",
+    "SouthAmerica": "mongodb://mongo-southamerica:10029/SouthAmerica_receive_pending",
+    "Antarctica": "mongodb://mongo-antarctica:10030/Antarctica_receive_pending",
+    "Default": "mongodb://mongo-default:27017/Default_receive_pending"
+  },
+  "complete": {
+    "Asia": "mongodb://mongo-asia:10024/Asia_complete",
+    "Europe": "mongodb://mongo-europe:10025/Europe_complete",
+    "Australia": "mongodb://mongo-australia:10026/Australia_complete",
+    "Africa": "mongodb://mongo-africa:10027/Africa_complete",
+    "NorthAmerica": "mongodb://mongo-northamerica:10028/NorthAmerica_complete",
+    "SouthAmerica": "mongodb://mongo-southamerica:10029/SouthAmerica_complete",
+    "Antarctica": "mongodb://mongo-antarctica:10030/Antarctica_complete",
+    "Default": "mongodb://mongo-default:27017/Default_complete"
+  },
+  "analytics": {
+    "Asia": "mongodb://mongo-asia:12024/Asia_analytics",
+    "Europe": "mongodb://mongo-europe:12025/Europe_analytics",
+    "Australia": "mongodb://mongo-australia:12026/Australia_analytics",
+    "Africa": "mongodb://mongo-africa:12027/Africa_analytics",
+    "NorthAmerica": "mongodb://mongo-northamerica:12028/NorthAmerica_analytics",
+    "SouthAmerica": "mongodb://mongo-southamerica:12029/SouthAmerica_analytics",
+    "Antarctica": "mongodb://mongo-antarctica:12030/Antarctica_analytics",
+    "Default": "mongodb://mongo-default:12000/Default_analytics"
+  },
+  "journal_entries": {
+    "Asia": "mongodb://mongo-asia:13024/Asia_journal_entries",
+    "Europe": "mongodb://mongo-europe:13025/Europe_journal_entries",
+    "Australia": "mongodb://mongo-australia:13026/Australia_journal_entries",
+    "Africa": "mongodb://mongo-africa:13027/Africa_journal_entries",
+    "NorthAmerica": "mongodb://mongo-northamerica:13028/NorthAmerica_journal_entries",
+    "SouthAmerica": "mongodb://mongo-southamerica:13029/SouthAmerica_journal_entries",
+    "Antarctica": "mongodb://mongo-antarctica:13030/Antarctica_journal_entries",
+    "Default": "mongodb://mongo-default:13000/Default_journal_entries"
+  },
+  "update_status_url": "http://localhost:10600/update_status"
+}

@@ -3,46 +3,58 @@ use sha2::{Sha256, Digest};
 use chrono::{DateTime, Utc};
 use rand::Rng;
 use rand::prelude::SliceRandom;
+use ntru::NtruEncrypt; // NTRU暗号化ライブラリを使用
 
 pub mod ntru_encrypt;
 pub mod ntru_param;
 pub mod ntru_sign;
 
-#[derive(Serialize, Deserialize, Clone, Debug)] // 追加: Debugの属性
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct NTRUKeys {
     pub public_key: Vec<u8>,
     pub private_key: Vec<u8>,
 }
 
+// NTRUキーの生成
 pub fn generate_ntru_keys() -> NTRUKeys {
-    let mut rng = rand::thread_rng();
-    let public_key = (0..64).map(|_| rng.gen::<u8>()).collect();
-    let private_key = (0..64).map(|_| rng.gen::<u8>()).collect();
-    NTRUKeys { public_key, private_key }
+    let (public_key, private_key) = NtruEncrypt::generate_keypair(); // NTRUライブラリを使用
+    NTRUKeys {
+        public_key: public_key.to_vec(),
+        private_key: private_key.to_vec(),
+    }
 }
 
+// NTRU暗号化
 pub fn ntru_encrypt(data: &[u8], public_key: &[u8]) -> Vec<u8> {
-    data.iter().zip(public_key).map(|(&d, &k)| d ^ k).collect()
+    let mut ntru = NtruEncrypt::new();
+    ntru.encrypt(data, public_key).expect("Encryption failed")
 }
 
-pub fn ntru_sign(data: &[u8], private_key: &[u8]) -> Vec<u8> {
-    private_key.iter().zip(data).map(|(&k, &d)| k ^ d).collect()
-}
-
+// NTRU復号化
 pub fn ntru_decrypt(encrypted_data: &[u8], private_key: &[u8]) -> Vec<u8> {
-    encrypted_data.iter().zip(private_key).map(|(&e, &k)| e ^ k).collect()
+    let mut ntru = NtruEncrypt::new();
+    ntru.decrypt(encrypted_data, private_key).expect("Decryption failed")
 }
 
-pub fn sign_transaction(data: &[u8], private_key: &[u8]) -> Vec<u8> {
-    private_key.iter().zip(data).map(|(&k, &d)| k ^ d).collect()
+// NTRU署名の生成
+pub fn ntru_sign(data: &[u8], private_key: &[u8]) -> Vec<u8> {
+    let mut hasher = Sha256::new();
+    hasher.update(data);
+    let hashed_data = hasher.finalize();
+    let mut ntru = NtruEncrypt::new();
+    ntru.sign(&hashed_data, private_key).expect("Signing failed")
 }
 
+// 署名の検証
 pub fn verify_signature(data: &[u8], signature: &[u8], public_key: &[u8]) -> bool {
-    let calculated_signature: Vec<u8> = public_key.iter().zip(data).map(|(&k, &d)| k ^ d).collect();
-    calculated_signature == signature
+    let mut hasher = Sha256::new();
+    hasher.update(data);
+    let hashed_data = hasher.finalize();
+    let mut ntru = NtruEncrypt::new();
+    ntru.verify(&hashed_data, signature, public_key).unwrap_or(false)
 }
 
-// Proof of Place struct and implementation
+// Proof of Placeの実装
 #[derive(Serialize, Deserialize)]
 pub struct ProofOfPlace {
     pub location: (f64, f64),
@@ -71,14 +83,16 @@ impl ProofOfPlace {
     }
 }
 
-// Proof of History struct and implementation
+// Proof of Historyの実装
 pub struct ProofOfHistory {
     pub sequence: Vec<String>,
 }
 
 impl ProofOfHistory {
     pub fn new() -> Self {
-        ProofOfHistory { sequence: Vec::new() }
+        ProofOfHistory {
+            sequence: Vec::new(),
+        }
     }
 
     pub fn add_event(&mut self, event: &str) {
@@ -94,7 +108,7 @@ impl ProofOfHistory {
     }
 }
 
-// DPoS struct and implementation
+// DPoSの実装
 pub struct DPoS {
     pub municipalities: Vec<String>,
     pub approved_representative: Option<String>,
@@ -124,6 +138,7 @@ impl DPoS {
     }
 }
 
+// トランザクション構造体
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Transaction {
     pub transaction_id: String,
@@ -206,7 +221,7 @@ impl Transaction {
             self.sender_public_key,
             self.receiver_public_key
         );
-        self.signature = hex::encode(Sha256::digest(message.as_bytes())).as_bytes().to_vec();
+        self.signature = ntru_sign(message.as_bytes(), &hex::decode(&self.sender_public_key).unwrap());
     }
 
     pub fn verify_signature(&self) -> bool {
@@ -223,12 +238,15 @@ impl Transaction {
             self.sender_public_key,
             self.receiver_public_key
         );
-        let computed_signature = hex::encode(Sha256::digest(message.as_bytes())).as_bytes().to_vec();
-        self.signature == computed_signature
+        verify_signature(
+            message.as_bytes(),
+            &self.signature,
+            &hex::decode(&self.sender_public_key).unwrap(),
+        )
     }
 }
 
-// Consensus struct and implementation
+// Consensusの実装
 pub struct Consensus {
     pub dpos: DPoS,
     pub poh: ProofOfHistory,
@@ -252,9 +270,9 @@ impl Consensus {
         for transaction in &mut self.transactions {
             if self.dpos.approve_transaction(transaction).is_ok() {
                 self.poh.add_event(&transaction.generate_proof_of_history());
-                println!("Transaction processed: {:?}", transaction); // Debugのための修正
+                println!("Transaction processed: {:?}", transaction);
             } else {
-                println!("Transaction failed: {:?}", transaction); // Debugのための修正
+                println!("Transaction failed: {:?}", transaction);
             }
         }
     }

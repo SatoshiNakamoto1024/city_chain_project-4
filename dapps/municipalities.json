@@ -1,0 +1,76 @@
+{
+    "Default": {
+      "mongodb_port": "10034",
+      "flask_port": "1034",
+      "cities": [
+        {"name": "Defaultcity", "city_port": "19999", "city_flask_port": "1999"}
+      ]
+    },
+    "Asia": {
+      "mongodb_port": "10024",
+      "flask_port": "1024",
+      "cities": [
+        {"name": "Kanazawa", "city_port": "20000", "city_flask_port": "2000"},
+        {"name": "Komatsu", "city_port": "20001", "city_flask_port": "2001"},
+        {"name": "Hakusan", "city_port": "20002", "city_flask_port": "2002"},
+        {"name": "Nomi", "city_port": "20003", "city_flask_port": "2003"},
+        {"name": "Kaga", "city_port": "20004", "city_flask_port": "2004"},
+        {"name": "Taipei", "city_port": "20005", "city_flask_port": "2005"}
+      ]
+    },
+    "Europe": {
+      "mongodb_port": "10025",
+      "flask_port": "1025",
+      "cities": [
+        {"name": "Sligo", "city_port": "20006", "city_flask_port": "2006"},
+        {"name": "Berlin", "city_port": "20007", "city_flask_port": "2007"},
+        {"name": "Rome", "city_port": "20008", "city_flask_port": "2008"}
+      ]
+    },
+    "Australia": {
+      "mongodb_port": "10026",
+      "flask_port": "1026",
+      "cities": [
+        {"name": "Sydney", "city_port": "20009", "city_flask_port": "2009"},
+        {"name": "Melbourne", "city_port": "20010", "city_flask_port": "2010"},
+        {"name": "Brisbane", "city_port": "20011", "city_flask_port": "2011"}
+      ]
+    },
+    "Africa": {
+      "mongodb_port": "10027",
+      "flask_port": "1027",
+      "cities": [
+        {"name": "Cairo", "city_port": "20012", "city_flask_port": "2012"},
+        {"name": "Lagos", "city_port": "20013", "city_flask_port": "2013"},
+        {"name": "CapeTown", "city_port": "20014", "city_flask_port": "2014"}
+      ]
+    },
+    "NorthAmerica": {
+      "mongodb_port": "10028",
+      "flask_port": "1028",
+      "cities": [
+        {"name": "Boston", "city_port": "20015", "city_flask_port": "2015"},
+        {"name": "LosAngeles", "city_port": "20016", "city_flask_port": "2016"},
+        {"name": "Toronto", "city_port": "20017", "city_flask_port": "2017"}
+      ]
+    },
+    "SouthAmerica": {
+      "mongodb_port": "10029",
+      "flask_port": "1029",
+      "cities": [
+        {"name": "Cusco", "city_port": "20018", "city_flask_port": "2018"},
+        {"name": "BuenosAires", "city_port": "20019", "city_flask_port": "2019"},
+        {"name": "Lima", "city_port": "20020", "city_flask_port": "2020"}
+      ]
+    },
+    "Antarctica": {
+      "mongodb_port": "10030",
+      "flask_port": "1030",
+      "cities": [
+        {"name": "McMurdo_Station", "city_port": "20021", "city_flask_port": "2021"},
+        {"name": "Amundsen-Scott_SouthPoleStation", "city_port": "20022", "city_flask_port": "2022"},
+        {"name": "Rothera_ResearchStation", "city_port": "20023", "city_flask_port": "2023"}
+      ]
+    }
+}
+  

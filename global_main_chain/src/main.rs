@@ -10,6 +10,9 @@ use reqwest::Client;
 use rand::{Rng, prelude::SliceRandom};
 use sha2::{Sha256, Digest};
 use std::collections::HashMap;
+use mongodb::{Client as MongoClient, options::ClientOptions, Collection, bson::{doc, Bson, DateTime as BsonDateTime}};
+use futures::stream::TryStreamExt;
+use immudb_proto::immudb_proto_function;
 
 use ntru::ntru_encrypt::NtruEncrypt;
 use ntru::ntru_sign::NtruSign;
@@ -28,15 +31,23 @@ struct Block {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct Transaction {
+    transaction_id: String,
     sender: String,
     receiver: String,
     amount: f64,
     verifiable_credential: String,
     signature: Vec<u8>,
     location: (f64, f64),
-    timestamp: DateTime<Utc>,
+    timestamp: String,
     proof_of_place: String,
-    transaction_id: String,
+    sender_municipality: String,
+    receiver_municipality: String,
+    sender_continent: String,
+    receiver_continent: String,
+    sender_municipal_id: String,
+    receiver_municipal_id: String,
+    status: String,
+    created_at: DateTime<Utc>,
 }
 
 impl Transaction {
@@ -46,17 +57,31 @@ impl Transaction {
         amount: f64,
         verifiable_credential: String,
         location: (f64, f64),
+        sender_municipality: String,
+        receiver_municipality: String,
+        sender_continent: String,
+        receiver_continent: String,
+        sender_municipal_id: String,
+        receiver_municipal_id: String,
     ) -> Self {
         let mut transaction = Transaction {
+            transaction_id: uuid::Uuid::new_v4().to_string(),
             sender,
             receiver,
             amount,
             verifiable_credential,
             signature: vec![],
             location,
-            timestamp: Utc::now(),
+            timestamp: Utc::now().to_rfc3339(),
             proof_of_place: String::new(),
-            transaction_id: "0".to_string(),
+            sender_municipality,
+            receiver_municipality,
+            sender_continent,
+            receiver_continent,
+            sender_municipal_id,
+            receiver_municipal_id,
+            status: "pending".to_string(),
+            created_at: Utc::now(),
         };
         transaction.proof_of_place = ProofOfPlace::new(location).generate_proof();
         transaction
@@ -68,10 +93,18 @@ impl Transaction {
         hex::encode(hasher.finalize())
     }
 
-    fn verify_signature(&self, public_key: &str) -> bool {
-        let computed_signature = hex::encode(Sha256::digest(format!("{:?}", self).as_bytes()));
-        self.signature == computed_signature.into_bytes()
-    }
+    fn verify_signature(&self, public_key: &[u8]) -> bool {
+        let ntru_param = NtruParam::default(); // 適切なパラメータを選択
+        let ntru_sign = NtruSign::new(&ntru_param);
+    
+        let transaction_data = format!("{:?}", self);
+        
+        // 公開鍵を使用して署名を検証
+        match ntru_sign.verify(&transaction_data.as_bytes(), &self.signature, &public_key) {
+            Ok(true) => true,
+            _ => false,
+        }
+    }    
 }
 
 type Blockchain = Arc<Mutex<Vec<Block>>>;
@@ -97,7 +130,16 @@ impl DPoS {
 
     fn approve_transaction(&self, transaction: &mut Transaction) -> Result<&str, &str> {
         if let Some(representative) = &self.approved_representative {
-            transaction.signature = format!("approved_by_{}", representative).into_bytes();
+            let ntru_param = NtruParam::default(); // 適切なパラメータを選択
+            let ntru_sign = NtruSign::new(&ntru_param);
+            
+            // トランザクションデータを署名
+            let transaction_data = format!("{:?}", transaction);
+            let private_key = // ここで秘密鍵を適切に取得する
+            let signature = ntru_sign.sign(&transaction_data.as_bytes(), &private_key).expect("Signing failed");
+            
+            transaction.signature = signature;
+            
             Ok("Transaction approved")
         } else {
             Err("No representative elected")
@@ -169,18 +211,13 @@ impl Consensus {
         }
     }
 
-    fn add_transaction(&mut self, transaction: Transaction) {
-        self.transactions.push(transaction);
-    }
-
-    fn process_transactions(&mut self) {
-        for transaction in &mut self.transactions {
-            if self.dpos.approve_transaction(transaction).is_ok() {
-                self.poh.add_event(&transaction.generate_proof_of_history());
-                println!("Transaction processed: {:?}", transaction);
-            } else {
-                println!("Transaction failed: {:?}", transaction);
-            }
+    fn add_transaction(&mut self, mut transaction: Transaction) {
+        if self.dpos.approve_transaction(&mut transaction).is_ok() {
+            self.poh.add_event(&transaction.generate_proof_of_history());
+            println!("Transaction processed: {:?}", transaction);
+            self.transactions.push(transaction);
+        } else {
+            println!("Transaction approval failed.");
         }
     }
 
@@ -189,65 +226,88 @@ impl Consensus {
     }
 }
 
+#[derive(Clone)]
+struct AppState {
+    mongo_collection: Collection<Transaction>,
+}
+
 #[get("/")]
 fn index() -> &'static str {
     "Welcome to the Global Main Chain!"
 }
 
-#[post("/transaction", format = "json", data = "<transaction>")]
-async fn create_transaction(transaction: Json<Transaction>, client: &rocket::State<Client>) -> Json<Transaction> {
-    let mut consensus = Consensus::new(vec!["Municipality1".to_string(), "Municipality2".to_string()]);
-    consensus.add_transaction(transaction.into_inner());
-    consensus.process_transactions();
+#[post("/transaction", format = "json", data = "<transaction_json>")]
+async fn create_transaction(
+    transaction_json: Json<Transaction>,
+    client: &rocket::State<Client>,
+    state: &rocket::State<Arc<AppState>>,
+) -> Result<Json<Transaction>, Status> {
+    let mut transaction = transaction_json.into_inner();
 
-    let global_chain_url = "https://127.0.0.1:8000/transaction";
-    let res = client.post(global_chain_url)
-                    .json(&consensus.transactions.last().unwrap())
-                    .send()
-                    .await;
+    // 送信者の公開鍵を取得（ここでは仮に公開鍵が設定されているとします）
+    let public_key = // ここで公開鍵を適切に取得する（例: データベースやファイルシステムから取得）
 
-    match res {
-        Ok(_) => Json(consensus.transactions.last().unwrap().clone()),
-        Err(_) => Json(Transaction {
-            sender: "error".to_string(),
-            receiver: "error".to_string(),
-            amount: 0.0,
-            verifiable_credential: "error".to_string(),
-            signature: vec![],
-            location: (0.0, 0.0),
-            timestamp: Utc::now(),
-            proof_of_place: "error".to_string(),
-            transaction_id: "error".to_string(),
-        }),
+    // 署名を検証
+    if !transaction.verify_signature(&public_key) {
+        println!("Invalid signature for transaction: {:?}", transaction.transaction_id);
+        return Err(Status::BadRequest);
     }
-}
 
-#[post("/add_block", format = "json", data = "<block>")]
-async fn add_block(block: Json<Block>, chain: &rocket::State<Blockchain>, client: &rocket::State<Client>) -> Status {
-    println!("Received block: {:?}", block);
-    let mut chain = chain.lock().await;
-    let block_inner = block.into_inner();
-    let block_clone = block_inner.clone();
-    chain.push(block_inner);
+    // DPoS コンセンサスの処理
+    let mut consensus = Consensus::new(vec![
+        transaction.sender_municipality.clone(),
+        transaction.receiver_municipality.clone(),
+    ]);
 
-    println!("Block added to local chain. Attempting to send to global chain.");
+    consensus.add_transaction(transaction.clone());
 
-    let global_chain_url = "https://127.0.0.1:8000/add_block";
-    let res = client.post(global_chain_url)
-                    .json(&block_clone)
-                    .send()
-                    .await;
-
-    match res {
+    // トランザクションをデータベースに保存
+    let state_clone = state.clone();
+    match state_clone.mongo_collection.insert_one(transaction.clone(), None).await {
         Ok(_) => {
-            println!("Block successfully sent to global chain.");
-            Status::Accepted
-        },
+            println!("Transaction inserted into MongoDB.");
+        }
         Err(e) => {
-            println!("Failed to send block to global chain: {:?}", e);
-            Status::InternalServerError
+            println!("Failed to insert transaction into MongoDB: {:?}", e);
+            return Err(Status::InternalServerError);
         }
     }
+
+    // トランザクションをクライアントに返す
+    Ok(Json(transaction))
+}
+
+#[post("/receive_block", format = "json", data = "<block>")]
+async fn receive_block(
+    block: Json<Block>,
+    chain: &rocket::State<Blockchain>,
+) -> Status {
+    println!("Received block from continent: {:?}", block);
+
+    let mut chain = chain.lock().await;
+    chain.push(block.into_inner());
+
+    println!("Block added to global chain.");
+
+    Status::Accepted
+}
+
+#[post("/add_block", format = "json", data = "<block_json>")]
+async fn add_block(
+    block_json: Json<Block>,
+    chain: &rocket::State<Blockchain>,
+    client: &rocket::State<Client>,
+) -> Status {
+    println!("Received block: {:?}", block_json);
+    let mut chain = chain.lock().await;
+    let block_inner = block_json.into_inner();
+    chain.push(block_inner);
+
+    println!("Block added to local chain.");
+
+    // グローバルチェーンへのブロック送信処理を実装する必要があります
+
+    Status::Accepted
 }
 
 #[get("/chain")]
@@ -258,16 +318,41 @@ async fn get_chain(chain: &rocket::State<Blockchain>) -> Json<Vec<Block>> {
 
 #[rocket::main]
 async fn main() {
+    immudb_proto_function();
+
+    // MongoDB クライアントの初期化
+    let mongo_client_options = ClientOptions::parse("mongodb://localhost:27017").await.unwrap();
+    let mongo_client = MongoClient::with_options(mongo_client_options).unwrap();
+    let mongo_db = mongo_client.database("global_chain_db");
+    let mongo_collection = mongo_db.collection::<Transaction>("transactions");
+
+    // インデックスの作成
+    mongo_collection.create_index(
+        mongodb::IndexModel::builder()
+            .keys(doc! { "transaction_id": 1 })
+            .build(),
+        None,
+    ).await.unwrap();
+
+    // アプリケーション状態の初期化
+    let app_state = Arc::new(AppState {
+        mongo_collection,
+    });
+
     let chain = Arc::new(Mutex::new(Vec::<Block>::new()));
 
-    let tls_config = TlsConfig::from_paths("d:\\city_chain_project\\cert.crt", "d:\\city_chain_project\\key.pem");
+    let tls_config = TlsConfig::from_paths(
+        "D:\\city_chain_project\\cert.crt",
+        "D:\\city_chain_project\\key.pem",
+    );
     let config = Config::figment()
-        .merge(("tls.certs", "d:\\city_chain_project\\cert.crt"))
-        .merge(("tls.key", "d:\\city_chain_project\\key.pem"));
+        .merge(("tls.certs", "D:\\city_chain_project\\cert.crt"))
+        .merge(("tls.key", "D:\\city_chain_project\\key.pem"));
 
     rocket::custom(config)
         .manage(chain)
         .manage(Client::new())
+        .manage(app_state)
         .mount("/", routes![index, create_transaction, add_block, get_chain])
         .launch()
         .await

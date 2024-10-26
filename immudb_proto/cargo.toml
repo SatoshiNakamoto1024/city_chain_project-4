@@ -1,0 +1,13 @@
+[package]
+name = "immudb_proto"  # クレート名
+version = "0.1.0"  # バージョン
+edition = "2018"  # Rustのエディション
+
+[dependencies]
+# NTRUクレートを依存関係に追加
+ntru = "0.5"  # 最新バージョンに合わせて変更
+
+# Tonic（gRPCライブラリ）を依存関係に追加
+tonic = { version = "0.7", features = ["tls"] }
+
+# その他の依存関係が必要な場合は追加

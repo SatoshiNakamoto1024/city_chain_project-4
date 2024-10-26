@@ -5,39 +5,45 @@ import base64
 from Crypto.PublicKey import RSA
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA256
+from pqcrypto.sign.dilithium import generate_keypair, sign, verify
+import hashlib
 
 class Ntru:
     def __init__(self):
-        pass
+        self.public_key, self.private_key = generate_keypair()  # 鍵ペア生成
 
     def encrypt(self, plaintext, public_key):
-        # 暗号化の簡単な実装例
-        return bytes([p ^ k for p, k in zip(plaintext, public_key)])
+        # NTRUではなく、署名の部分に注力するために削除
+        pass
 
     def decrypt(self, ciphertext, private_key):
-        # 復号化の簡単な実装例
-        return bytes([c ^ k for c, k in zip(ciphertext, private_key)])
+        # NTRUではなく、署名の部分に注力するために削除
+        pass
 
-    def sign(self, message, private_key):
-        # 署名の簡単な実装例
-        hashed_message = SHA256.new(message)
-        signature = pkcs1_15.new(private_key).sign(hashed_message)
-        return signature
+    def sign(self, message):
+        # メッセージに対する署名
+        return sign(message, self.private_key)
 
-    def verify(self, message, signature, public_key):
-        # 署名検証の簡単な実装例
-        hashed_message = SHA256.new(message)
-        try:
-            pkcs1_15.new(public_key).verify(hashed_message, signature)
-            return True
-        except (ValueError, TypeError):
-            return False
+    def verify(self, message, signature):
+        # 署名の検証
+        return verify(message, signature, self.public_key)
+
+# Ntruクラスを使用するコード
+if __name__ == "__main__":
+    ntru = Ntru()
+    message = "Hello, NTRU!"
+    signature = ntru.sign(message.encode('utf-8'))
+    is_valid = ntru.verify(message.encode('utf-8'), signature)
+
+    print(f"Signature: {signature}")
+    print(f"Is signature valid? {is_valid}")
 
 # DPoSの実装
 class DPoS:
-    def __init__(self, municipalities):
+    def __init__(self, municipalities, private_key):
         self.municipalities = municipalities
         self.approved_representative = None
+        self.private_key = private_key
 
     def elect_representative(self):
         self.approved_representative = random.choice(self.municipalities)
@@ -45,21 +51,27 @@ class DPoS:
 
     def approve_transaction(self, transaction):
         if self.approved_representative:
-            transaction['signature'] = f"approved_by_{self.approved_representative}"
+            signature = sign(transaction['data'].encode(), self.private_key)
+            transaction['signature'] = base64.b64encode(signature).decode()
             return True
         else:
             return False
 
 # Proof of Placeの実装
+class ProofOfPlace:
+    def __init__(self, location, private_key):
+        self.location = location
+        self.timestamp = datetime.utcnow()
+        self.private_key = private_key
+
     def generate_proof(self):
-        proof_string = f"{self.location}{self.timestamp}"
-        return hashlib.sha256(proof_string.encode()).hexdigest()
+        proof_data = f"{self.location}{self.timestamp}".encode()
+        return sign(proof_data, self.private_key)
 
     @staticmethod
-    def verify_proof(proof, location, timestamp):
-        proof_string = f"{location}{timestamp}"
-        computed_proof = hashlib.sha256(proof_string.encode()).hexdigest()
-        return computed_proof == proof
+    def verify_proof(proof, location, timestamp, public_key):
+        proof_data = f"{location}{timestamp}".encode()
+        return verify(proof_data, proof, public_key)
 
 # Proof of Historyの実装
 class ProofOfHistory:

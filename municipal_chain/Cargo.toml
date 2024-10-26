@@ -12,20 +12,28 @@ serde_json = "1.0"
 rand = "0.8"
 ntru = { path = "../ntru" }
 sha2 = "0.9"
+mongodb = { version = "2.0.0", default-features = false, features = ["tokio-runtime"] }
 tokio = { version = "1.8", features = ["full"] }
 hex = "0.4"
 openssl = { version = "0.10", features = ["vendored"] }
 openssl-sys = "0.9"
+uuid = { version = "1.0", features = ["v4"] }
+base64 = "0.13"
+tokio-stream = "0.1"  # バージョンは適宜最新のものにしてください
+tonic = { version = "0.7", features = ["tls"] }
+prost = "0.9"
+immudb_proto = { path = "../immudb_proto" }
+
+# `ntru`関連の依存パッケージ
+[dependencies.ntru]
+version = "0.1"
+path = "../ntru"
 
 [patch.crates-io]
 openssl-src = { path = "local_openssl_src" }
 
 [dependencies.rust-crypto]
 version = "0.2"
-optional = true
-
-[dependencies.base64]
-version = "0.13"
 optional = true
 
 [dependencies.tracing]

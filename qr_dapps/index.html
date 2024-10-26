@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>愛貨送信用QR DApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #qr-code {
+            margin-top: 20px;
+        }
+        #confirmation {
+            margin-top: 20px;
+        }
+        #missing-info {
+            color: red;
+            margin-top: 10px;
+        }
+        #user-inputs {
+            margin-top: 20px;
+        }
+        #user-inputs input {
+            padding: 5px;
+            margin: 5px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>愛貨送信用QR DApp</h1>
+
+    <h2>音声入力</h2>
+    <!-- 音声入力ボタン -->
+    <button id="start-record">音声入力開始</button>
+    <button id="stop-record" disabled>音声入力停止</button>
+    <p id="transcript">音声を入力してください...</p>
+
+    <h2>解析結果の確認</h2>
+    <ul>
+        <li id="sender-confirm">送信者: 未入力</li>
+        <li id="receiver-confirm">受信者: 不明（QRコードで相手を特定）</li>
+        <li id="amount-confirm">金額: 未入力</li>
+        <li id="debit-confirm">借方科目: 未入力</li>
+        <li id="credit-confirm">貸方科目: 未入力</li>
+        <li id="details-confirm">詳細: 未入力</li>
+    </ul>
+
+    <div id="missing-info"></div>
+
+    <div id="user-inputs" style="display: none;">
+        <h3>不足情報の入力</h3>
+        <div id="missing-fields-container"></div>
+        <button id="submit-missing-info">情報を送信</button>
+    </div>
+
+    <h2>QRコード発行</h2>
+    <button id="generate-qr">QRコードを生成</button>
+
+    <div id="qr-code"></div>
+    <div id="message"></div>
+
+    <script>
+        let transactionData = {};
+        let mediaRecorder;
+        let audioChunks = [];
+
+        // 音声録音の開始
+        document.getElementById('start-record').addEventListener('click', async function () {
+            // 音声録音を開始
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = function (e) {
+                        audioChunks.push(e.data);
+                    };
+
+                    mediaRecorder.onstop = function () {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        sendAudioToServer(audioBlob);
+                    };
+
+                    document.getElementById('start-record').disabled = true;
+                    document.getElementById('stop-record').disabled = false;
+                    document.getElementById('transcript').textContent = '録音中...';
+                } catch (err) {
+                    console.error('音声の取得に失敗しました:', err);
+                }
+            } else {
+                alert('お使いのブラウザは音声録音に対応していません。');
+            }
+        });
+
+        // 音声録音の停止
+        document.getElementById('stop-record').addEventListener('click', function () {
+            mediaRecorder.stop();
+            document.getElementById('start-record').disabled = false;
+            document.getElementById('stop-record').disabled = true;
+            document.getElementById('transcript').textContent = '解析中...';
+        });
+
+        // サーバーに音声を送信
+        async function sendAudioToServer(audioBlob) {
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'voice_input.wav');
+
+            try {
+                const response = await fetch('/api/voice_to_text', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                // 解析結果を表示
+                document.getElementById('transcript').textContent = result.details || '解析結果なし';
+
+                // 各項目を確認
+                document.getElementById('sender-confirm').textContent = `送信者: ${result.sender || '未入力'}`;
+                document.getElementById('amount-confirm').textContent = `金額: ${result.amount || '未入力'}`;
+                document.getElementById('debit-confirm').textContent = `借方科目: ${result.debit || '未入力'}`;
+                document.getElementById('credit-confirm').textContent = `貸方科目: ${result.credit || '未入力'}`;
+                document.getElementById('details-confirm').textContent = `詳細: ${result.details || '未入力'}`;
+
+                // トランザクションデータを保持
+                transactionData.sender = result.sender || '';
+                transactionData.amount = result.amount || '';
+                transactionData.debit = result.debit || '';
+                transactionData.credit = result.credit || '';
+                transactionData.details = result.details || '';
+
+                // 必要項目が揃っているか確認
+                let missingFields = result.missing_fields || [];
+                if (missingFields.length > 0) {
+                    document.getElementById('missing-info').textContent = `不足項目: ${missingFields.join(', ')}`;
+                    showMissingFieldsInput(missingFields);
+                } else {
+                    document.getElementById('missing-info').textContent = '';
+                    document.getElementById('user-inputs').style.display = 'none';
+                }
+
+            } catch (err) {
+                console.error('サーバーへの送信に失敗しました:', err);
+                document.getElementById('transcript').textContent = 'サーバーへの送信に失敗しました。';
+            }
+        }
+
+        // 不足情報の入力フォームを表示
+        function showMissingFieldsInput(missingFields) {
+            const container = document.getElementById('missing-fields-container');
+            container.innerHTML = ''; // 既存の入力欄をクリア
+            missingFields.forEach(field => {
+                const label = document.createElement('label');
+                label.textContent = field;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = `missing-${field}`;
+                container.appendChild(label);
+                container.appendChild(input);
+            });
+            document.getElementById('user-inputs').style.display = 'block';
+        }
+
+        // 不足情報の送信
+        document.getElementById('submit-missing-info').addEventListener('click', function () {
+            const missingFields = document.getElementById('missing-fields-container').querySelectorAll('input');
+            missingFields.forEach(input => {
+                const field = input.id.replace('missing-', '');
+                transactionData[field] = input.value;
+
+                // 画面表示の更新
+                document.getElementById(`${field}-confirm`).textContent = `${field}: ${input.value || '未入力'}`;
+            });
+
+            document.getElementById('user-inputs').style.display = 'none';
+            document.getElementById('missing-info').textContent = '';
+        });
+
+        // QRコードの生成
+        document.getElementById('generate-qr').addEventListener('click', async function () {
+            // 必須項目の確認
+            if (!transactionData.sender || !transactionData.amount || !transactionData.debit || !transactionData.credit) {
+                document.getElementById('message').textContent = 'すべての項目が揃っていません。';
+                return;
+            }
+
+            // QRコード生成リクエスト
+            const response = await fetch('/generate_qr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(transactionData)
+            });
+
+            const result = await response.json();
+            if (result.qr_code_url) {
+                document.getElementById('qr-code').innerHTML = `<img src="${result.qr_code_url}" alt="QRコード">`;
+                document.getElementById('message').textContent = 'QRコードが生成されました。相手に提示してください。';
+            } else {
+                document.getElementById('message').textContent = `QRコードの生成に失敗しました: ${result.error || ''}`;
+            }
+        });
+    </script>
+</body>
+</html>

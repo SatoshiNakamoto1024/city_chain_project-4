@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>送信用Dapp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #send-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: red;
+        }
+        /* フォームのスタイル */
+        #transaction-form {
+            margin-bottom: 20px;
+        }
+        #transaction-form label {
+            display: inline-block;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        #transaction-form input, #transaction-form select {
+            padding: 5px;
+            margin-bottom: 10px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>送信用Dapp</h1>
+
+    <!-- ログインフォーム -->
+    <div id="login-form">
+        <h2>ログイン</h2>
+        <label for="username">ユーザー名:</label>
+        <input type="text" id="username"><br>
+        <label for="password">パスワード:</label>
+        <input type="password" id="password"><br>
+        <button id="login-button">ログイン</button>
+        <div id="login-message"></div>
+    </div>
+
+    <!-- トランザクション送信用フォーム -->
+    <div id="transaction-form" style="display: none;">
+        <h2>トランザクションを作成</h2>
+        <label for="sender">送信者名:</label>
+        <input type="text" id="sender"><br>
+        
+        <label for="receiver">受信者名:</label>
+        <input type="text" id="receiver"><br>
+        
+        <label for="amount">金額:</label>
+        <input type="number" id="amount" step="0.01"><br>
+        
+        <label for="sender_municipality">送信者の市町村:</label>
+        <input type="text" id="sender_municipality"><br>
+        
+        <label for="receiver_municipality">受信者の市町村:</label>
+        <input type="text" id="receiver_municipality"><br>
+
+        <label for="private_key">秘密鍵:</label>
+        <input type="password" id="private_key"><br>
+
+        <label for="seed_phrase">シードフレーズ:</label>
+        <input type="text" id="seed_phrase"><br>
+
+        <button id="send-button">送信する</button>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        let authToken = null;
+
+        // ログインボタンの処理
+        document.getElementById('login-button').addEventListener('click', async function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                document.getElementById('login-message').textContent = 'ユーザー名とパスワードを入力してください。';
+                return;
+            }
+
+            // ログインリクエストを送信
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    authToken = result.token;  // トークンを保存
+                    document.getElementById('login-message').textContent = 'ログイン成功！';
+                    document.getElementById('login-form').style.display = 'none';
+                    document.getElementById('transaction-form').style.display = 'block';
+                } else {
+                    const errorData = await response.json();
+                    document.getElementById('login-message').textContent = `エラー: ${errorData.message}`;
+                }
+            } catch (error) {
+                document.getElementById('login-message').textContent = 'ログイン中にエラーが発生しました。';
+            }
+        });
+
+        // トランザクション送信ボタンの処理
+        document.getElementById('send-button').addEventListener('click', async function() {
+            const sender = document.getElementById('sender').value;
+            const receiver = document.getElementById('receiver').value;
+            const amount = document.getElementById('amount').value;
+            const sender_municipality = document.getElementById('sender_municipality').value;
+            const receiver_municipality = document.getElementById('receiver_municipality').value;
+            const private_key = document.getElementById('private_key').value;
+            const seed_phrase = document.getElementById('seed_phrase').value;
+
+            if (!sender || !receiver || !amount || !sender_municipality || !receiver_municipality || !private_key || !seed_phrase) {
+                document.getElementById('message').textContent = 'すべてのフィールドに入力してください。';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/send_transaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`  // トークンをリクエストに追加
+                    },
+                    body: JSON.stringify({
+                        sender, receiver, amount, sender_municipality, receiver_municipality, private_key, seed_phrase
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    document.getElementById('message').textContent = 'トランザクションが送信されました！';
+                } else {
+                    const errorData = await response.json();
+                    document.getElementById('message').textContent = `エラー: ${errorData.error}`;
+                }
+            } catch (error) {
+                document.getElementById('message').textContent = 'トランザクションの送信中にエラーが発生しました。';
+            }
+        });
+    </script>
+</body>
+</html>

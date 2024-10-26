@@ -8,7 +8,9 @@ WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y \
     pkg-config \
     libssl-dev \
-    openssl
+    openssl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # ソースコードをコピー
 COPY . .
@@ -21,5 +23,5 @@ RUN cd /usr/src/app/ntru && cargo build --release
 # メインアプリケーションの依存関係をビルド
 RUN cargo build --release
 
-# アプリケーションを起動
+# デフォルトの起動コマンド（必要に応じて変更可能）
 CMD ["./target/release/continental_main_chain"]

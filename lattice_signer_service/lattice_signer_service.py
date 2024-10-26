@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import base64
 import hashlib
 from ntru import Ntru
+from pqcrypto.sign.dilithium import generate_keypair, sign, verify
 from datetime import datetime
 import random
 
@@ -11,12 +12,22 @@ ntru = Ntru()
 # 鍵ペアの生成（例）
 public_key = b'\x01' * 64  # 例として64バイトのダミー公開鍵
 private_key = b'\x02' * 64  # 例として64バイトのダミー秘密鍵
+class LatticeSigner:
+    def __init__(self):
+        self.public_key, self.private_key = generate_keypair()
+
+    def sign(self, message):
+        return sign(message, self.private_key)
+
+    def verify(self, message, signature):
+        return verify(message, signature, self.public_key)
 
 # DPoSアルゴリズムの実装
 class DPoS:
-    def __init__(self, municipalities):
+    def __init__(self, municipalities, private_key):
         self.municipalities = municipalities
         self.approved_representative = None
+        self.private_key = private_key
 
     def elect_representative(self):
         self.approved_representative = random.choice(self.municipalities)
@@ -24,26 +35,27 @@ class DPoS:
 
     def approve_transaction(self, transaction):
         if self.approved_representative:
-            transaction['signature'] = f"approved_by_{self.approved_representative}"
+            signature = sign(transaction['data'].encode(), self.private_key)
+            transaction['signature'] = base64.b64encode(signature).decode()
             return True
         else:
             return False
 
 # Proof of Placeの実装
 class ProofOfPlace:
-    def __init__(self, location):
+    def __init__(self, location, private_key):
         self.location = location
         self.timestamp = datetime.utcnow()
+        self.private_key = private_key
 
     def generate_proof(self):
-        proof_string = f"{self.location}{self.timestamp}"
-        return hashlib.sha256(proof_string.encode()).hexdigest()
+        proof_data = f"{self.location}{self.timestamp}".encode()
+        return sign(proof_data, self.private_key)
 
     @staticmethod
-    def verify_proof(proof, location, timestamp):
-        proof_string = f"{location}{timestamp}"
-        computed_proof = hashlib.sha256(proof_string.encode()).hexdigest()
-        return proof == computed_proof
+    def verify_proof(proof, location, timestamp, public_key):
+        proof_data = f"{location}{timestamp}".encode()
+        return verify(proof_data, proof, public_key)
 
 # Proof of Historyの実装
 class ProofOfHistory:

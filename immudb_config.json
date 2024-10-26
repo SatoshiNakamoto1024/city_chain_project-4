@@ -1,0 +1,50 @@
+{
+    "Asia": {
+      "host": "immudb-asia",
+      "port": 3322,
+      "username": "immudb",
+      "password": "asia_password"
+    },
+    "Europe": {
+      "host": "immudb-europe",
+      "port": 3323,
+      "username": "immudb",
+      "password": "europe_password"
+    },
+    "Australia": {
+      "host": "immudb-australia",
+      "port": 3324,
+      "username": "immudb",
+      "password": "australia_password"
+    },
+    "Africa": {
+      "host": "immudb-africa",
+      "port": 3325,
+      "username": "immudb",
+      "password": "africa_password"
+    },
+    "NorthAmerica": {
+      "host": "immudb-northamerica",
+      "port": 3326,
+      "username": "immudb",
+      "password": "northamerica_password"
+    },
+    "SouthAmerica": {
+      "host": "immudb-southamerica",
+      "port": 3327,
+      "username": "immudb",
+      "password": "southamerica_password"
+    },
+    "Antarctica": {
+      "host": "immudb-antarctica",
+      "port": 3328,
+      "username": "immudb",
+      "password": "antarctica_password"
+    },
+    "default": {
+      "host": "immudb-default",
+      "port": 3329,
+      "username": "immudb",
+      "password": "default_password"
+    }
+}
